@@ -18,43 +18,42 @@ public class Cliente {
     private String cedula;
     private String nombre;
     private String apellido;
-    private int edad;
-    private Date fechaNacimiento;
     private String celular;
-    private Double salario;
+    private String correo;
+    private String direccion;
 
     public Cliente() {
     }
 
-    public Cliente(String cedula, String nombre, String apellido, int edad, Date fechaNacimiento, String celular, Double salario) {
+    public Cliente(String cedula, String nombre, String apellido, String celular, String correo, String direccion) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.edad = edad;
-        this.fechaNacimiento = fechaNacimiento;
         this.celular = celular;
-        this.salario = salario;
+        this.correo = correo;
+        this.direccion = direccion;
     }
 
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+    
     public String getNombre() {
         return nombre;
     }
 
-    public Double getSalario() {
-        return salario;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setSalario(Double salario) {
-        this.salario = salario;
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
-
-    public Date getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(Date fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
+    
 
     public String getCelular() {
         return celular;
@@ -92,19 +91,11 @@ public class Cliente {
 
     }
 
-    public int getEdad() {
-        return edad;
-    }
-
-    public void setEdad(int edad) {
-
-        this.edad = edad;
-
-    }
-
     @Override
     public String toString() {
-        return "Persona{" + "cedula=" + cedula + ", nombre=" + nombre + ", apellido=" + apellido + ", edad=" + edad + ", fechaNacimiento=" + fechaNacimiento + ", celular=" + celular + ", salario=" + salario + '}';
+        return "Cliente{" + "cedula=" + cedula + ", nombre=" + nombre + ", apellido=" + apellido + ", celular=" + celular + ", correo=" + correo + ", direccion=" + direccion + '}';
     }
+
+    
 
 }

@@ -18,10 +18,10 @@ public class Producto {
     private String nombre;
     private double precio;
     private String descripcion;
-    private ImageIcon imgIcon;
+    //private ImageIcon imgIcon;
 
     public Producto() {
-        imgIcon = new ImageIcon();
+        //imgIcon = new ImageIcon();
     }
 
     public Producto(String nombre, int precio, String marca, String descripcion) {
@@ -70,13 +70,14 @@ public class Producto {
         this.descripcion = detalle;
     }
 
+    /*
     public ImageIcon getImgIcon() {
         return imgIcon;
     }
 
     public void setImgIcon(ImageIcon imgIcon) {
         this.imgIcon = imgIcon;
-    }
+    }*/
 
     @Override
     public int hashCode() {

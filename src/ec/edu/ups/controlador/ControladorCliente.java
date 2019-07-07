@@ -31,13 +31,13 @@ public class ControladorCliente{
     }
 
     public void create(Cliente persona) throws PSQLException{
-        Format formato = new SimpleDateFormat("yyyy-MM-dd");
-        String fecha = formato.format(persona.getFechaNacimiento());
-        String sql = "INSERT INTO \"PERSONA\" VALUES('" + persona.getCedula() + "', '"
+        String sql = "INSERT INTO \"CLIENTE\" VALUES('" + persona.getCedula() + "', '"
                 + persona.getNombre() + "', '"
-                + persona.getApellido() + "', "
-                + persona.getEdad() + ", '"
-                + fecha + "', '" + persona.getCelular() + "'," + persona.getSalario() + ");";
+                + persona.getApellido() + "', '"
+                + persona.getCelular()+ "', '"
+                + persona.getCorreo() + "', '" 
+                + persona.getCelular() + "', '" 
+                + persona.getDireccion()+ "');";
 
         miBaseDatos.conectar();
         try {
@@ -51,7 +51,7 @@ public class ControladorCliente{
     }
 
     public void delete(String cedula) {
-        String sql = "DELETE FROM \"PERSONA\" WHERE \"PER_CEDULA\" = '" + cedula + "';";
+        String sql = "DELETE FROM \"CLIENTE\" WHERE \"CLI_CEDULA\" = '" + cedula + "';";
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
@@ -63,15 +63,12 @@ public class ControladorCliente{
     }
 
     public void update(Cliente persona) {
-        Format formato = new SimpleDateFormat("yyyy-MM-dd");
-        String fecha = formato.format(persona.getFechaNacimiento());
-        String sql = "UPDATE \"PERSONA\" SET \"PER_NOMBRES\" = '" + persona.getNombre() + "',"
-                + "\"PER_APELLIDOS\" = '" + persona.getApellido() + "',"
-                + "\"PER_EDAD\" = " + persona.getEdad() + ","
-                + "\"PER_FECHA_NACIMIENTO\" = '" + fecha + "',"
-                + "\"PER_CELULAR\" = '" + persona.getCelular() + "',"
-                + "\"PER_SALARIO\" = " + persona.getSalario()
-                + "WHERE \"PER_CEDULA\" = '" + persona.getCedula() + "';";
+        String sql = "UPDATE \"CLIENTE\" SET \"CLI_NOMBRE\" = '" + persona.getNombre() + "',"
+                + "\"CLI_APELLIDO\" = '" + persona.getApellido() + "',"
+                + "\"CLI_CELULAR\" = '" + persona.getCelular() + "',"
+                + "\"CLI_CORREO\" = '" + persona.getCorreo() + "',"
+                + "\"CLI_DIRECCION\" = '" + persona.getCorreo()
+                + "WHERE \"CLI_CEDULA\" = '" + persona.getCedula() + "';";
         miBaseDatos.conectar();
 
         try {
@@ -86,19 +83,18 @@ public class ControladorCliente{
     public Cliente findByCedula(String cedula) {
         Cliente persona = new Cliente();
         try {
-            String sql = "SELECT * FROM \"PERSONA\" WHERE \"PER_CEDULA\" = '" + cedula + "';";
+            String sql = "SELECT * FROM \"CLIENTE\" WHERE \"CLI_CEDULA\" = '" + cedula + "';";
             System.out.println(sql);
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);
             while (rs.next()) {
                 persona.setCedula(cedula);
-                persona.setNombre(rs.getString("PER_NOMBRES"));
-                persona.setApellido(rs.getString("PER_APELLIDOS"));
-                persona.setEdad(rs.getInt("PER_EDAD"));
-                persona.setFechaNacimiento(rs.getDate("PER_FECHA_NACIMIENTO"));
-                persona.setCelular(rs.getString("PER_CELULAR"));
-                persona.setSalario(rs.getDouble("PER_SALARIO"));
+                persona.setNombre(rs.getString("CLI_NOMBRE"));
+                persona.setApellido(rs.getString("CLI_APELLIDO"));
+                persona.setCelular(rs.getString("CLI_CELULAR"));
+                persona.setCorreo(rs.getString("CLI_CORREO"));
+                persona.setDireccion(rs.getString("CLI_DIRECCION"));
             }
             rs.close();
             sta.close();
@@ -147,13 +143,12 @@ public class ControladorCliente{
             ResultSet rs = sta.executeQuery(sql);
             while (rs.next()) {
                 Cliente persona = new Cliente();
-                persona.setCedula(rs.getString("PER_CEDULA"));
-                persona.setNombre(rs.getString("PER_NOMBRES"));
-                persona.setApellido(rs.getString("PER_APELLIDOS"));
-                persona.setEdad(rs.getInt("PER_EDAD"));
-                persona.setFechaNacimiento(rs.getDate("PER_FECHA_NACIMIENTO"));
-                persona.setCelular(rs.getString("PER_CELULAR"));
-                persona.setSalario(rs.getDouble("PER_SALARIO"));
+                persona.setCedula(rs.getString("CLI_CEDULA"));
+                persona.setNombre(rs.getString("CLI_NOMBRE"));
+                persona.setApellido(rs.getString("CLI_APELLIDO"));
+                persona.setCelular(rs.getString("CLI_CELULAR"));
+                persona.setCorreo(rs.getString("CLI_CORREO"));
+                persona.setDireccion(rs.getString("CLI_DIRECCION"));
                 personas.add(persona);
             }
             rs.close();
