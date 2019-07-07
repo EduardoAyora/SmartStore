@@ -9,6 +9,7 @@ import ec.edu.ups.controlador.ControladorFactura;
 import ec.edu.ups.modelo.Detalle;
 import ec.edu.ups.modelo.Factura;
 import java.awt.Dimension;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javax.swing.JButton;
@@ -44,7 +45,7 @@ public class ListarFacturas extends javax.swing.JInternalFrame {
 
         JButton btnDetalles = new JButton(mensajes.getString("factura.detalle"));
         DefaultTableModel modelo = (DefaultTableModel) tblFactura.getModel();
-        Set<Factura> lista = controladorFactura.getLista();
+        List<Factura> lista = controladorFactura.listar();
         for (Factura factura : lista) {
             //Factura activa
             String activo = "";
@@ -185,10 +186,10 @@ public class ListarFacturas extends javax.swing.JInternalFrame {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
                 int numDetalle = evt.getY() / tblFactura.getRowHeight();
-                Factura factura = controladorFactura.buscarPosicion(numDetalle);
+                //Factura factura = controladorFactura.buscarPosicion(numDetalle);
                 if (ventanaReadFactura == null || ventanaReadFactura.isVisible() == false) {
                     ventanaReadFactura = new VentanaReadFactura(mensajes);
-                    ventanaReadFactura.setFactura(factura);
+                    //ventanaReadFactura.setFactura(factura);
                     ventanaReadFactura.llenarDatos();
                     ventanaReadFactura.setVisible(true);
                     //VistaCaja.jDesktopPane1.add(ventanaReadFactura);

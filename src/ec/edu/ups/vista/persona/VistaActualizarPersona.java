@@ -168,13 +168,9 @@ public class VistaActualizarPersona extends javax.swing.JInternalFrame {
         try {
             Cliente persona = controladorPersona.findByCedula(txtCedula.getText());
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            String fecha = formato.format(persona.getFechaNacimiento());
             txtNombre.setText(persona.getNombre());
             txtApellido.setText(persona.getApellido());
-            txtEdad.setText(Integer.toString(persona.getEdad()));
-            txtNacimiento.setText(fecha);
             txtCelular.setText(persona.getCelular());
-            txtSalario.setText(Double.toString(persona.getSalario()));
         }catch(java.lang.NullPointerException ex){
             JOptionPane.showMessageDialog(this, "La persona no existe", "Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -187,12 +183,9 @@ public class VistaActualizarPersona extends javax.swing.JInternalFrame {
             persona.setCedula(txtCedula.getText());
             persona.setNombre(txtNombre.getText());
             persona.setApellido(txtApellido.getText());
-            persona.setEdad(Integer.parseInt(txtEdad.getText()));
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             Date fecha = formato.parse(txtNacimiento.getText());
-            persona.setFechaNacimiento(fecha);
             persona.setCelular(txtCelular.getText());
-            persona.setSalario(Double.parseDouble(txtSalario.getText()));
             controladorPersona.update(persona);
             JOptionPane.showMessageDialog(this, "Persona actualizada con éxito", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
             vaciarCajas();

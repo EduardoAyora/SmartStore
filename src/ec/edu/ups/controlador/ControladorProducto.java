@@ -80,8 +80,8 @@ public class ControladorProducto {
     public void update(Producto producto) {
         String sql = "UPDATE \"PRODUCTO\" SET \"PRO_NOMBRE\" = '" + producto.getNombre() + "',"
                 + "\"PRO_PRECIO\" = " + producto.getPrecio() + ","
-                + "\"PRO_DESCRIPCION\" = '" + producto.getDescripcion() + "',"
-                + "WHERE \"PRO_CODIGO\" = " + producto.getCodigoProducto() + ";";
+                + "\"PRO_DESCRIPCION\" = '" + producto.getDescripcion()
+                + " WHERE \"PRO_CODIGO\" = " + producto.getCodigoProducto() + ";";
         miBaseDatos.conectar();
 
         try {

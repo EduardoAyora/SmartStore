@@ -21,7 +21,6 @@ public class Factura {
     private double subtotal;
     private double iva;
     private double total;
-    private int contadorDetalles;
     private boolean activo;
     private ControladorDetalle controladorDetalle;
 
@@ -29,7 +28,6 @@ public class Factura {
         activo = true;
         fecha = new Date();
         controladorDetalle = new ControladorDetalle();
-        contadorDetalles = 1;
     }
 
     public Factura(int numeroFactura, Date fecha, Cliente cliente, double subtotal, double iva, double total) {
@@ -57,10 +55,8 @@ public class Factura {
         this.numeroFactura = numeroFactura;
     }
 
-    public String getFecha() {
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        String fechaTexto = formato.format(fecha.getTime());
-        return fechaTexto;
+    public Date getFecha() {
+        return fecha;
     }
 
     public void setFecha(Date fecha) {

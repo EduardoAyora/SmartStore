@@ -68,7 +68,7 @@ public class ControladorCliente{
                 + "\"CLI_CELULAR\" = '" + persona.getCelular() + "',"
                 + "\"CLI_CORREO\" = '" + persona.getCorreo() + "',"
                 + "\"CLI_DIRECCION\" = '" + persona.getCorreo()
-                + "WHERE \"CLI_CEDULA\" = '" + persona.getCedula() + "';";
+                + " WHERE \"CLI_CEDULA\" = '" + persona.getCedula() + "';";
         miBaseDatos.conectar();
 
         try {

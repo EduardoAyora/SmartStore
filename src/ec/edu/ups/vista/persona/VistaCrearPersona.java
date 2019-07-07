@@ -175,12 +175,9 @@ public class VistaCrearPersona extends javax.swing.JInternalFrame {
             persona.setCedula(txtCedula.getText());
             persona.setNombre(txtNombre.getText());
             persona.setApellido(txtApellido.getText());
-            persona.setEdad(Integer.parseInt(txtEdad.getText()));
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             Date fecha = formato.parse(txtNacimiento.getText());
-            persona.setFechaNacimiento(fecha);
             persona.setCelular(txtCelular.getText());
-            persona.setSalario(Double.parseDouble(txtSalario.getText()));
             controladorPersona.create(persona);
             JOptionPane.showMessageDialog(this, "Persona creada exitosamente", "Crear persona", JOptionPane.INFORMATION_MESSAGE);
             vaciar();

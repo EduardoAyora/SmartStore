@@ -39,10 +39,7 @@ public class VistaListarPersonas extends javax.swing.JInternalFrame {
                 persona.getCedula(),
                 persona.getNombre(),
                 persona.getApellido(),
-                persona.getEdad(),
-                persona.getFechaNacimiento(),
                 persona.getCelular(),
-                persona.getSalario()
             };
             modelo.addRow(datos);
         }

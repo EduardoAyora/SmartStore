@@ -6,8 +6,17 @@
 package ec.edu.ups.controlador;
 
 import ec.edu.ups.modelo.Factura;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.ServerErrorMessage;
 
 /**
  *
@@ -15,72 +24,121 @@ import java.util.Set;
  */
 public class ControladorFactura {
 
-    private Set<Factura> lista;
-    private int numero;
-
-    public Set<Factura> getFactura() {
-        return lista;
-    }
-
-    public int getCodigo() {
-        return numero;
-    }
-
+    private BaseDatos miBaseDatos;
+    private int codigo;
+    
     public ControladorFactura() {
-        lista = new HashSet<>();
-        numero = 1;
+        miBaseDatos = new BaseDatos();
+        obtenerCodigo();
     }
-
-    public void create(Factura facturaCabecera) {
-        facturaCabecera.setNumeroFactura(numero);
-        numero++;
-        lista.add(facturaCabecera);
-    }
-
-    public Factura read(int numero) {
-        for (Factura facturaCabecera : lista) {
-            if (facturaCabecera.getNumeroFactura() == numero) {
-                return facturaCabecera;
+    
+    public void obtenerCodigo(){
+        String sql = "SELECT MAX(\"PRO_CODIGO\") FROM \"PRODUCTO\";";
+        miBaseDatos.conectar();
+        try {
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            ResultSet rs = sta.executeQuery(sql);
+            if (rs.next()) {
+                codigo = rs.getInt(1);
+                codigo++;
             }
-        }
-        return null;
-    }
-
-    public void update(Factura facturaCabecera) {
-        if (lista.contains(facturaCabecera)) {
-            lista.remove(facturaCabecera);
-            lista.add(facturaCabecera);
+            rs.close();
+            sta.close();
+            miBaseDatos.desconectar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
 
-    public void delete(int numero) {
-        for (Factura facturaCabecera : lista) {
-            if (facturaCabecera.getNumeroFactura() == numero) {
-                lista.remove(facturaCabecera);
-                break;
+    public void create(Factura factura) throws PSQLException{
+        Format formato = new SimpleDateFormat("yyyy-MM-dd");
+        String fecha = formato.format(factura.getFecha());
+        String sql = "INSERT INTO \"FACTURA\" VALUES(" + factura.getNumeroFactura()+ ", '"
+                + fecha + "', '"
+                + factura.getCliente().getCedula() + "', "
+                + factura.getSubtotal() + ", "
+                + factura.getIva()+ ", "
+                + factura.getTotal()+ ", "
+                + factura.isActivo()+ ");";
+
+        miBaseDatos.conectar();
+        try {
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            sta.execute(sql);
+            miBaseDatos.desconectar();
+        } catch (SQLException ex) {
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
+        }
+    }
+    
+    public void anular(int codigo) {
+        String sql = "UPDATE \"FACTURA\" SET \"FAC_ACTIVO\" = false WHERE \"FAC_CODIGO\" = " + codigo + ";";
+        miBaseDatos.conectar();
+        try {
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            sta.execute(sql);
+            miBaseDatos.desconectar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public Factura read(int codigo) {
+        Factura factura = new Factura();
+        try {
+            String sql = "SELECT * FROM \"FACTURA\" WHERE \"FAC_CODIGO\" = " + codigo + ";";
+            System.out.println(sql);
+            miBaseDatos.conectar();
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            ResultSet rs = sta.executeQuery(sql);
+            if (rs.next()) {
+                factura.setNumeroFactura(codigo);
+                factura.setFecha(rs.getDate("FAC_FECHA"));
+                factura.setCliente(new ControladorCliente().findByCedula(rs.getString("CLI_CEDULA")));
+                factura.setSubtotal(rs.getDouble("FAC_SUBTOTAL"));
+                factura.setIva(rs.getDouble("FAC_IVA"));
+                factura.setTotal(rs.getDouble("FAC_TOTAL"));
+                factura.setActivo(rs.getBoolean("FAC_ACTIVO"));
             }
+            rs.close();
+            sta.close();
+            miBaseDatos.desconectar();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return factura;
     }
 
-    public void imprimir() {
-        for (Factura facturaCabecera : lista) {
-            System.out.println(facturaCabecera.getNumeroFactura());
-        }
-    }
 
-    public Set<Factura> getLista() {
-        return lista;
-    }
-
-    public Factura buscarPosicion(int posicion){
-        int i = 0;
-        for(Factura factura : lista){
-            if(i == posicion){
-                return factura;
+    public List<Factura> listar(){
+        List<Factura> facturas = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT * FROM \"FACTURA\"";
+            System.out.println(sql);
+            miBaseDatos.conectar();
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            ResultSet rs = sta.executeQuery(sql);
+            while (rs.next()) {
+                Factura factura = new Factura();
+                factura.setNumeroFactura(rs.getInt("FAC_CODIGO"));
+                factura.setFecha(rs.getDate("FAC_FECHA"));
+                factura.setCliente(new ControladorCliente().findByCedula(rs.getString("CLI_CEDULA")));
+                factura.setSubtotal(rs.getDouble("FAC_SUBTOTAL"));
+                factura.setIva(rs.getDouble("FAC_IVA"));
+                factura.setTotal(rs.getDouble("FAC_TOTAL"));
+                factura.setActivo(rs.getBoolean("FAC_ACTIVO"));
+                facturas.add(factura);
             }
-            i++;
+            rs.close();
+            sta.close();
+            miBaseDatos.desconectar();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return null;
+        
+        return facturas;
     }
     
 }

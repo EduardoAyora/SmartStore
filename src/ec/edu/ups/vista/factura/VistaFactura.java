@@ -10,6 +10,7 @@ import ec.edu.ups.controlador.ControladorFactura;
 import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Detalle;
 import ec.edu.ups.modelo.Factura;
+import java.util.List;
 import java.util.Set;
 import javax.swing.table.DefaultTableModel;
 
@@ -34,12 +35,11 @@ public class VistaFactura extends javax.swing.JFrame {
         initComponents();
         this.factura = new Factura();
         initComponents();
-        txtNumeroFactura.setText(Integer.toString(this.controladorFactura.getCodigo()));
     }
 
     public void llenarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
-        Set<Detalle> lista = factura.getControladorDetalle().getLista();
+        List<Detalle> lista = factura.getControladorDetalle().listar();
         for (Detalle detalle : lista) {
             Object[] datos = {detalle.getProducto().getCodigoProducto(),
                 detalle.getProducto().getNombre(),

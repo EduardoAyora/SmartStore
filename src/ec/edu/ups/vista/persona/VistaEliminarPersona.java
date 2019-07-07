@@ -182,13 +182,9 @@ public class VistaEliminarPersona extends javax.swing.JInternalFrame {
         try {
             Cliente persona = controladorPersona.findByCedula(txtCedula.getText());
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            String fecha = formato.format(persona.getFechaNacimiento());
             txtNombre.setText(persona.getNombre());
             txtApellido.setText(persona.getApellido());
-            txtEdad.setText(Integer.toString(persona.getEdad()));
-            txtNacimiento.setText(fecha);
             txtCelular.setText(persona.getCelular());
-            txtSalario.setText(Double.toString(persona.getSalario()));
             valido = true;
         } catch (java.lang.NullPointerException ex) {
             JOptionPane.showMessageDialog(this, "La persona no existe", "Error", JOptionPane.WARNING_MESSAGE);

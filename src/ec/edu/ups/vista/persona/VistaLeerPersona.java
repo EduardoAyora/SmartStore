@@ -203,13 +203,9 @@ public class VistaLeerPersona extends javax.swing.JInternalFrame {
         try {
             Cliente persona = controladorPersona.findByCedula(txtCedula.getText());
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            String fecha = formato.format(persona.getFechaNacimiento());
             txtNombre.setText(persona.getNombre());
             txtApellido.setText(persona.getApellido());
-            txtEdad.setText(Integer.toString(persona.getEdad()));
-            txtNacimiento.setText(fecha);
             txtCelular.setText(persona.getCelular());
-            txtSalario.setText(Double.toString(persona.getSalario()));
             //Tabla de direcciones
             //llenarDirecciones(persona.getCedula());
         }catch(java.lang.NullPointerException ex){

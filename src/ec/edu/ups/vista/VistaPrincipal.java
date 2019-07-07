@@ -48,12 +48,15 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         desktopPane = new javax.swing.JDesktopPane();
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        itmCrear = new javax.swing.JMenuItem();
-        itmLeer = new javax.swing.JMenuItem();
-        itmActualizar = new javax.swing.JMenuItem();
-        itmEliminar = new javax.swing.JMenuItem();
+        menuPersona = new javax.swing.JMenu();
+        itmCrudPersona = new javax.swing.JMenuItem();
         itmListar = new javax.swing.JMenuItem();
+        menuProducto = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        menuFactura = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -62,44 +65,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("Persona");
+        menuPersona.setMnemonic('f');
+        menuPersona.setText("Persona");
 
-        itmCrear.setMnemonic('o');
-        itmCrear.setText("Crear");
-        itmCrear.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmCrearActionPerformed(evt);
-            }
-        });
-        fileMenu.add(itmCrear);
-
-        itmLeer.setMnemonic('s');
-        itmLeer.setText("Leer");
-        itmLeer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmLeerActionPerformed(evt);
-            }
-        });
-        fileMenu.add(itmLeer);
-
-        itmActualizar.setMnemonic('a');
-        itmActualizar.setText("Actualizar");
-        itmActualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmActualizarActionPerformed(evt);
-            }
-        });
-        fileMenu.add(itmActualizar);
-
-        itmEliminar.setMnemonic('x');
-        itmEliminar.setText("Eliminar");
-        itmEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itmEliminarActionPerformed(evt);
-            }
-        });
-        fileMenu.add(itmEliminar);
+        itmCrudPersona.setText("CRUD");
+        menuPersona.add(itmCrudPersona);
 
         itmListar.setText("Listar");
         itmListar.addActionListener(new java.awt.event.ActionListener() {
@@ -107,9 +77,34 @@ public class VistaPrincipal extends javax.swing.JFrame {
                 itmListarActionPerformed(evt);
             }
         });
-        fileMenu.add(itmListar);
+        menuPersona.add(itmListar);
 
-        menuBar.add(fileMenu);
+        menuBar.add(menuPersona);
+
+        menuProducto.setText("Producto");
+
+        jMenuItem1.setText("CRUD");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        menuProducto.add(jMenuItem1);
+
+        jMenuItem2.setText("Listar");
+        menuProducto.add(jMenuItem2);
+
+        menuBar.add(menuProducto);
+
+        menuFactura.setText("Factura");
+
+        jMenuItem3.setText("CRUD");
+        menuFactura.add(jMenuItem3);
+
+        jMenuItem4.setText("Listar");
+        menuFactura.add(jMenuItem4);
+
+        menuBar.add(menuFactura);
 
         setJMenuBar(menuBar);
 
@@ -127,54 +122,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void itmEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmEliminarActionPerformed
-
-        if (eliminar == null || eliminar.isVisible() == false) {
-            eliminar = new VistaEliminarPersona();
-            eliminar.setVisible(true);
-            Dimension dimensionEscritorio = desktopPane.getSize();
-            Dimension dimension = eliminar.getSize();
-            eliminar.setLocation((dimensionEscritorio.width - dimension.width) / 2, (dimensionEscritorio.height - dimension.height) / 2);
-            desktopPane.add(eliminar);
-        }
-    }//GEN-LAST:event_itmEliminarActionPerformed
-
-    private void itmCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCrearActionPerformed
-        // TODO add your handling code here:
-        if (crear == null || crear.isVisible() == false) {
-            crear = new VistaCrearPersona();
-            crear.setVisible(true);
-            Dimension dimensionEscritorio = desktopPane.getSize();
-            Dimension dimension = crear.getSize();
-            crear.setLocation((dimensionEscritorio.width - dimension.width) / 2, (dimensionEscritorio.height - dimension.height) / 2);
-            desktopPane.add(crear);
-        }
-    }//GEN-LAST:event_itmCrearActionPerformed
-
-    private void itmLeerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmLeerActionPerformed
-
-        if (leer == null || leer.isVisible() == false) {
-            leer = new VistaLeerPersona();
-            leer.setVisible(true);
-            Dimension dimensionEscritorio = desktopPane.getSize();
-            Dimension dimension = leer.getSize();
-            leer.setLocation((dimensionEscritorio.width - dimension.width) / 2, (dimensionEscritorio.height - dimension.height) / 2);
-            desktopPane.add(leer);
-        }
-    }//GEN-LAST:event_itmLeerActionPerformed
-
-    private void itmActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmActualizarActionPerformed
-        // TODO add your handling code here:
-        if (actualizar == null || actualizar.isVisible() == false) {
-            actualizar = new VistaActualizarPersona();
-            actualizar.setVisible(true);
-            Dimension dimensionEscritorio = desktopPane.getSize();
-            Dimension dimension = actualizar.getSize();
-            actualizar.setLocation((dimensionEscritorio.width - dimension.width) / 2, (dimensionEscritorio.height - dimension.height) / 2);
-            desktopPane.add(actualizar);
-        }
-    }//GEN-LAST:event_itmActualizarActionPerformed
-
     private void itmListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmListarActionPerformed
         // TODO add your handling code here:
         if (listarPersonas == null || listarPersonas.isVisible() == false) {
@@ -191,6 +138,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_formWindowClosing
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -230,13 +181,16 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem itmActualizar;
-    private javax.swing.JMenuItem itmCrear;
-    private javax.swing.JMenuItem itmEliminar;
-    private javax.swing.JMenuItem itmLeer;
+    private javax.swing.JMenuItem itmCrudPersona;
     private javax.swing.JMenuItem itmListar;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuFactura;
+    private javax.swing.JMenu menuPersona;
+    private javax.swing.JMenu menuProducto;
     // End of variables declaration//GEN-END:variables
 
 }
