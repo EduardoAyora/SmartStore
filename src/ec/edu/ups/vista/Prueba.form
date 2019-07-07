@@ -63,6 +63,11 @@
                   </Group>
               </Group>
           </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="207" max="-2" attributes="0"/>
+              <Component id="btnFactura" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -89,6 +94,8 @@
               </Group>
               <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
               <Component id="btnAceptar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="btnFactura" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="47" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -171,11 +178,25 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Cerrar1"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCerrar1ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCerrar2">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cerrar2"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCerrar2ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnFactura">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Crear Factura"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFacturaActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -37,6 +37,8 @@ public class Prueba extends javax.swing.JFrame {
         facturas = new ArrayList<>();
         controladorProducto = new ControladorProducto();
         controladorCliente = new ControladorCliente();
+        estante1 = new Estante();
+        estante2 = new Estante();
         estante1.setCodigo(1);
         estante1.setProducto(controladorProducto.read(1));
         estante2.setCodigo(2);
@@ -63,6 +65,7 @@ public class Prueba extends javax.swing.JFrame {
         btnAceptar = new javax.swing.JButton();
         btnCerrar1 = new javax.swing.JButton();
         btnCerrar2 = new javax.swing.JButton();
+        btnFactura = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -130,8 +133,25 @@ public class Prueba extends javax.swing.JFrame {
         });
 
         btnCerrar1.setText("Cerrar1");
+        btnCerrar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrar1ActionPerformed(evt);
+            }
+        });
 
         btnCerrar2.setText("Cerrar2");
+        btnCerrar2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrar2ActionPerformed(evt);
+            }
+        });
+
+        btnFactura.setText("Crear Factura");
+        btnFactura.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFacturaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -167,6 +187,10 @@ public class Prueba extends javax.swing.JFrame {
                                 .addComponent(btnKaren))
                             .addComponent(btnCerrar2))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(207, 207, 207)
+                .addComponent(btnFactura)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -189,6 +213,8 @@ public class Prueba extends javax.swing.JFrame {
                     .addComponent(btnCerrar2))
                 .addGap(40, 40, 40)
                 .addComponent(btnAceptar)
+                .addGap(18, 18, 18)
+                .addComponent(btnFactura)
                 .addContainerGap(47, Short.MAX_VALUE))
         );
 
@@ -211,51 +237,95 @@ public class Prueba extends javax.swing.JFrame {
 
     private void btnP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP1ActionPerformed
         // TODO add your handling code here:
-        Producto producto = estante1.getProducto();
-        Cliente clienteEstante = estante1.getCliente();
-        facturacion(clienteEstante, producto);
+        if (cliente != null) {
+            Producto producto = estante1.getProducto();
+            Cliente clienteEstante = estante1.getCliente();
+            facturacion(clienteEstante, producto);
+        }
     }//GEN-LAST:event_btnP1ActionPerformed
 
     private void btnP22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP22ActionPerformed
         // TODO add your handling code here:
-        Producto producto = estante2.getProducto();
+        if (cliente != null) {
+            Producto producto = estante2.getProducto();
+            Cliente clienteEstante = estante2.getCliente();
+            facturacion(clienteEstante, producto);
+        }
     }//GEN-LAST:event_btnP22ActionPerformed
 
     private void btnP11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP11ActionPerformed
         // TODO add your handling code here:
-        Producto producto = estante1.getProducto();
+        if (cliente != null) {
+            Producto producto = estante1.getProducto();
+            Cliente clienteEstante = estante1.getCliente();
+            facturacion(clienteEstante, producto);
+        }
     }//GEN-LAST:event_btnP11ActionPerformed
 
     private void btnP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP2ActionPerformed
         // TODO add your handling code here:
-        Producto producto = estante2.getProducto();
+        if (cliente != null) {
+            Producto producto = estante2.getProducto();
+            Cliente clienteEstante = estante2.getCliente();
+            facturacion(clienteEstante, producto);
+        }
     }//GEN-LAST:event_btnP2ActionPerformed
 
     private void btnCaja1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja1ActionPerformed
         // TODO add your handling code here:
-        if (estante1.isAbierto() == false) {
-            estante1.setAbierto(true);
-            estante1.setCliente(cliente);
+        if (cliente != null) {
+            if (estante1.isAbierto() == false) {
+                estante1.setAbierto(true);
+                estante1.setCliente(cliente);
+            }
         }
+
 
     }//GEN-LAST:event_btnCaja1ActionPerformed
 
     private void btnCaja2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja2ActionPerformed
         // TODO add your handling code here:
-        if (estante2.isAbierto() == false) {
-            estante2.setAbierto(true);
-            estante1.setCliente(cliente);
+        if (cliente != null) {
+            if (estante2.isAbierto() == false) {
+                estante2.setAbierto(true);
+                estante1.setCliente(cliente);
+            }
         }
+
     }//GEN-LAST:event_btnCaja2ActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
+        cliente = null;
     }//GEN-LAST:event_btnAceptarActionPerformed
 
-    public void facturacion(Cliente clienteEstante, Producto producto) {
+    private void btnFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturaActionPerformed
+        // TODO add your handling code here:
+        for (Factura factura : facturas) {
+            double subtotal = 0;
+            for (Detalle detalle : factura.getDetalles()) {
+                subtotal += detalle.getSubtotal();
+            }
+            factura.setSubtotal(subtotal);
+            double iva = subtotal * 0.12;
+            factura.setIva(iva);
+            factura.setTotal(subtotal + iva);
+            System.out.println(factura);
+        }
+    }//GEN-LAST:event_btnFacturaActionPerformed
 
+    private void btnCerrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCerrar1ActionPerformed
+
+    private void btnCerrar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCerrar2ActionPerformed
+
+    public void facturacion(Cliente clienteEstante, Producto producto) {
         boolean clienteEncontrado = false;
         for (Factura factura : facturas) {
+            System.out.println(factura.getCliente().getNombre());
             if (factura.getCliente().equals(clienteEstante)) {
                 boolean productoEncontrado = false;
                 for (Detalle detalle : factura.getDetalles()) {
@@ -331,6 +401,7 @@ public class Prueba extends javax.swing.JFrame {
     private javax.swing.JButton btnCerrar1;
     private javax.swing.JButton btnCerrar2;
     private javax.swing.JButton btnEdu;
+    private javax.swing.JButton btnFactura;
     private javax.swing.JButton btnKaren;
     private javax.swing.JButton btnP1;
     private javax.swing.JButton btnP11;
