@@ -7,7 +7,9 @@ package ec.edu.ups.modelo;
 
 import ec.edu.ups.controlador.ControladorDetalle;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -22,12 +24,12 @@ public class Factura {
     private double iva;
     private double total;
     private boolean activo;
-    private ControladorDetalle controladorDetalle;
+    private List<Detalle> detalles;
 
     public Factura() {
         activo = true;
         fecha = new Date();
-        controladorDetalle = new ControladorDetalle();
+        detalles = new ArrayList<>();
     }
 
     public Factura(int numeroFactura, Date fecha, Cliente cliente, double subtotal, double iva, double total) {
@@ -95,12 +97,12 @@ public class Factura {
         this.total = total;
     }
 
-    public ControladorDetalle getControladorDetalle() {
-        return controladorDetalle;
+    public List<Detalle> getDetalles() {
+        return detalles;
     }
 
-    public void setControladorDetalle(ControladorDetalle controladorDetalle) {
-        this.controladorDetalle = controladorDetalle;
+    public void setDetalles(List<Detalle> detalles) {
+        this.detalles = detalles;
     }
 
     @Override

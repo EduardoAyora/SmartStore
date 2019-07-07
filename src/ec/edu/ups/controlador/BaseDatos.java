@@ -26,7 +26,7 @@ public class BaseDatos {
     }
 
     public void conectar() {
-        String url = "jdbc:postgresql://localhost:5432/MiBaseDeDatos";
+        String url = "jdbc:postgresql://localhost:5432/SmartStore";
         String user = "postgres";
         String password = "Aga381joker";
         try {

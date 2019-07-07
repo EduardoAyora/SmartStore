@@ -20,9 +20,10 @@ public class Detalle  implements Comparable<Detalle>{
     public Detalle(){
     }
 
-    public Detalle(double precio, int cantidad, Producto producto) {
+    public Detalle(double precio, int cantidad, double subtotal, Producto producto) {
         this.precio = precio;
         this.cantidad = cantidad;
+        this.subtotal = subtotal;
         this.producto = producto;
     }
 

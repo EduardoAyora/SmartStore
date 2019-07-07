@@ -69,6 +69,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         menuPersona.setText("Persona");
 
         itmCrudPersona.setText("CRUD");
+        itmCrudPersona.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itmCrudPersonaActionPerformed(evt);
+            }
+        });
         menuPersona.add(itmCrudPersona);
 
         itmListar.setText("Listar");
@@ -141,7 +146,15 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void itmCrudPersonaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itmCrudPersonaActionPerformed
+        // TODO add your handling code here:
+        crear = new VistaCrearPersona();
+        crear.setVisible(true);
+        desktopPane.add(crear);
+    }//GEN-LAST:event_itmCrudPersonaActionPerformed
 
     /**
      * @param args the command line arguments

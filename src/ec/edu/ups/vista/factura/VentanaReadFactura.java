@@ -96,9 +96,10 @@ public class VentanaReadFactura extends javax.swing.JInternalFrame {
 
     }
 
+    
     public void llenarTabla() {
         DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
-        List<Detalle> lista = factura.getControladorDetalle().listar();
+        List<Detalle> lista = factura.getDetalles();
         for (Detalle detalle : lista) {
             Object[] datos = {detalle.getProducto().getCodigoProducto(),
                 detalle.getProducto().getNombre(),

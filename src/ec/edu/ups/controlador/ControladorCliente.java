@@ -36,7 +36,6 @@ public class ControladorCliente{
                 + persona.getApellido() + "', '"
                 + persona.getCelular()+ "', '"
                 + persona.getCorreo() + "', '" 
-                + persona.getCelular() + "', '" 
                 + persona.getDireccion()+ "');";
 
         miBaseDatos.conectar();
@@ -45,6 +44,7 @@ public class ControladorCliente{
             sta.execute(sql);
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             ServerErrorMessage serverError = new ServerErrorMessage("");
             throw new PSQLException(serverError);
         }
