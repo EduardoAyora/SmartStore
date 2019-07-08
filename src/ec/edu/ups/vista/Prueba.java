@@ -279,8 +279,6 @@ public class Prueba extends javax.swing.JFrame {
                 estante1.setCliente(cliente);
             }
         }
-
-
     }//GEN-LAST:event_btnCaja1ActionPerformed
 
     private void btnCaja2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja2ActionPerformed

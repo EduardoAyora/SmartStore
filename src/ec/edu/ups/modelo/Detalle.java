@@ -96,5 +96,10 @@ public class Detalle  implements Comparable<Detalle>{
     public int compareTo(Detalle o) {
         return this.codigo - o.getCodigo();
     }
+
+    @Override
+    public String toString() {
+        return "Detalle{" + "codigo=" + codigo + ", precio=" + precio + ", cantidad=" + cantidad + ", subtotal=" + subtotal + ", producto=" + producto + '}';
+    }
     
 }

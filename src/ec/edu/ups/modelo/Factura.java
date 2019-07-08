@@ -132,7 +132,15 @@ public class Factura {
 
     @Override
     public String toString() {
-        return "Factura{" + "numeroFactura=" + numeroFactura + ", fecha=" + fecha + ", cliente=" + cliente.getNombre() + ", subtotal=" + subtotal + ", iva=" + iva + ", total=" + total + ", activo=" + activo + ", detalles=" + detalles + '}';
+        return "Factura{" 
+                + "numeroFactura=" + numeroFactura 
+                + ", fecha=" + fecha 
+                + ", cliente=" + cliente.getNombre() 
+                + ", subtotal=" + subtotal 
+                + ", iva=" + iva 
+                + ", total=" + total 
+                + ", activo=" + activo 
+                + ", detalles=" + detalles + '}';
     }
     
 }
