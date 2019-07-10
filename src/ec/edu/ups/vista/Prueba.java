@@ -419,9 +419,9 @@ public class Prueba extends javax.swing.JFrame {
                     factura.getDetalles().add(detalle);
                 }
                 clienteEncontrado = true;
+                factura.setTiempoEspera(System.currentTimeMillis());
                 break;
             }
-            factura.setTiempoEspera(System.currentTimeMillis());
         }
         if (clienteEncontrado == false) {
             Detalle detalle = new Detalle();
@@ -440,6 +440,7 @@ public class Prueba extends javax.swing.JFrame {
     public void generarFactura() {
         for (int i = 0; i < facturas.size(); i++) {
             Factura factura = facturas.get(i);
+            System.out.println(System.currentTimeMillis() - factura.getTiempoEspera());
             if (System.currentTimeMillis() - factura.getTiempoEspera() > 17000) {
                 factura.setNumeroFactura(controladorFactura.getCodigo());
                 double subtotal = 0;
