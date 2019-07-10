@@ -32,7 +32,6 @@ public class BaseDatos {
         try {
             conexionBD = DriverManager.getConnection(url, user, password);
             if (conexionBD.isValid(5000)) {
-                System.out.println("Conexion exitosa");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -44,7 +43,6 @@ public class BaseDatos {
         try {
             if (!conexionBD.isClosed()) {
                 conexionBD.close();
-                System.out.println("Conexion Cerrada");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

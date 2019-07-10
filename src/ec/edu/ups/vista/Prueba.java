@@ -6,15 +6,23 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ControladorCliente;
+import ec.edu.ups.controlador.ControladorDetalle;
+import ec.edu.ups.controlador.ControladorFactura;
 import ec.edu.ups.controlador.ControladorProducto;
 import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Detalle;
 import ec.edu.ups.modelo.Estante;
 import ec.edu.ups.modelo.Factura;
+import ec.edu.ups.modelo.Pin;
 import ec.edu.ups.modelo.Producto;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -24,26 +32,55 @@ public class Prueba extends javax.swing.JFrame {
 
     ControladorProducto controladorProducto;
     ControladorCliente controladorCliente;
+    ControladorFactura controladorFactura;
+    ControladorDetalle controladorDetalle;
     Estante estante1;
     Estante estante2;
+    Pin pin1;
+    Pin pin2;
+    Pin pin3;
+    Pin pin4;
     List<Factura> facturas;
     Cliente cliente;
+    private boolean aceptar;
 
     /**
      * Creates new form Prueba
      */
     public Prueba() {
+        System.out.println(System.currentTimeMillis());
         initComponents();
         setLocationRelativeTo(null);
         facturas = new ArrayList<>();
         controladorProducto = new ControladorProducto();
         controladorCliente = new ControladorCliente();
+        controladorFactura = new ControladorFactura();
+        controladorDetalle = new ControladorDetalle();
+        paraPruebas();
+    }
+
+    public void paraPruebas() {
         estante1 = new Estante();
         estante2 = new Estante();
         estante1.setCodigo(1);
         estante1.setProducto(controladorProducto.read(1));
         estante2.setCodigo(2);
         estante2.setProducto(controladorProducto.read(2));
+        pin1 = new Pin(false);
+        pin2 = new Pin(false);
+        pin3 = new Pin(false);
+        pin4 = new Pin(false);
+        iniciarTimer();
+    }
+
+    public void iniciarTimer() {
+        Timer timer = new Timer(8000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Revisando");
+                generarFactura();
+            }
+        });
+        timer.start();
     }
 
     /**
@@ -161,46 +198,45 @@ public class Prueba extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAceptar)
+                        .addGap(172, 172, 172)
+                        .addComponent(btnFactura)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAceptar)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCaja1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                            .addComponent(btnCaja1)
+                            .addComponent(btnCaja2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnCerrar1)
+                            .addComponent(btnCerrar2))
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(btnP1)
                                 .addGap(30, 30, 30)
                                 .addComponent(btnP11))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCaja2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(btnP2)
                                 .addGap(30, 30, 30)
-                                .addComponent(btnP22)))
-                        .addGap(38, 38, 38))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnCerrar1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnEdu)
-                                .addGap(109, 109, 109)
-                                .addComponent(btnKaren))
-                            .addComponent(btnCerrar2))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(btnP22)))))
+                .addGap(38, 38, 38))
             .addGroup(layout.createSequentialGroup()
-                .addGap(207, 207, 207)
-                .addComponent(btnFactura)
+                .addGap(145, 145, 145)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnKaren, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnEdu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEdu)
-                    .addComponent(btnKaren))
-                .addGap(61, 61, 61)
+                .addGap(18, 18, 18)
+                .addComponent(btnEdu)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnKaren)
+                .addGap(42, 42, 42)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnP1)
                     .addComponent(btnP11)
@@ -213,10 +249,10 @@ public class Prueba extends javax.swing.JFrame {
                     .addComponent(btnCaja2)
                     .addComponent(btnCerrar2))
                 .addGap(40, 40, 40)
-                .addComponent(btnAceptar)
-                .addGap(18, 18, 18)
-                .addComponent(btnFactura)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAceptar)
+                    .addComponent(btnFactura))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         pack();
@@ -239,59 +275,70 @@ public class Prueba extends javax.swing.JFrame {
     private void btnP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP1ActionPerformed
         // TODO add your handling code here:
         Cliente clienteEstante = estante1.getCliente();
-        if (clienteEstante != null) {
+        if (clienteEstante != null && estante1.isAbierto() && pin1.isActivado() == false) {
             Producto producto = estante1.getProducto();
             System.out.println(clienteEstante);
             facturacion(clienteEstante, producto);
+            pin1.setActivado(true);
         }
     }//GEN-LAST:event_btnP1ActionPerformed
 
     private void btnP22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP22ActionPerformed
         // TODO add your handling code here:
         Cliente clienteEstante = estante2.getCliente();
-        if (clienteEstante != null) {
+        if (clienteEstante != null && estante2.isAbierto() && pin4.isActivado() == false) {
             Producto producto = estante2.getProducto();
             System.out.println(clienteEstante);
             facturacion(clienteEstante, producto);
+            pin4.setActivado(true);
         }
     }//GEN-LAST:event_btnP22ActionPerformed
 
     private void btnP11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP11ActionPerformed
         // TODO add your handling code here:
         Cliente clienteEstante = estante1.getCliente();
-        if (clienteEstante != null) {
+        if (clienteEstante != null && estante1.isAbierto() && pin2.isActivado() == false) {
             Producto producto = estante1.getProducto();
             System.out.println(clienteEstante);
             facturacion(clienteEstante, producto);
+            pin2.setActivado(true);
         }
     }//GEN-LAST:event_btnP11ActionPerformed
 
     private void btnP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP2ActionPerformed
         // TODO add your handling code here:
         Cliente clienteEstante = estante2.getCliente();
-        if (clienteEstante != null) {
+        if (clienteEstante != null && estante2.isAbierto() && pin3.isActivado() == false) {
             Producto producto = estante2.getProducto();
             System.out.println(clienteEstante);
             facturacion(clienteEstante, producto);
+            pin3.setActivado(true);
         }
     }//GEN-LAST:event_btnP2ActionPerformed
 
     private void btnCaja1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja1ActionPerformed
         // TODO add your handling code here:
         if (cliente != null) {
-            if (estante1.isAbierto() == false){
-                estante1.setAbierto(true);
+            if (estante1.isAbierto() == false) {
+                System.out.println("No esta abierto estante 1, se ha seleccionado");
+                estante1.setSeleccionado(true);
                 estante1.setCliente(cliente);
+            } else {
+                System.out.println("No puede seleccionar");
             }
         }
+        btnCaja1.setSelected(false);
     }//GEN-LAST:event_btnCaja1ActionPerformed
 
     private void btnCaja2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja2ActionPerformed
         // TODO add your handling code here:
         if (cliente != null) {
             if (estante2.isAbierto() == false) {
-                estante2.setAbierto(true);
+                System.out.println("No esta abierto estante 2, se ha seleccionado");
+                estante2.setSeleccionado(true);
                 estante2.setCliente(cliente);
+            } else {
+                System.out.println("No puede seleccionar");
             }
         }
     }//GEN-LAST:event_btnCaja2ActionPerformed
@@ -299,20 +346,44 @@ public class Prueba extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
         cliente = null;
+        if (estante1.isSeleccionado()) {
+            System.out.println("Esta seleccionado estante 1");
+            estante1.setAbierto(true);
+            estante1.setSeleccionado(false);
+        }
+        if (estante2.isSeleccionado()) {
+            System.out.println("Esta seleccionado estante 2");
+            estante2.setAbierto(true);
+            estante2.setSeleccionado(false);
+        }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void btnFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturaActionPerformed
         // TODO add your handling code here:
-        for(Factura factura : facturas) {
+        for (Factura factura : facturas) {
+            factura.setNumeroFactura(controladorFactura.getCodigo());
             double subtotal = 0;
-            for(Detalle detalle : factura.getDetalles()) {
+            for (Detalle detalle : factura.getDetalles()) {
                 subtotal += detalle.getSubtotal();
             }
             factura.setSubtotal(subtotal);
             factura.setIva(factura.getSubtotal() * 0.12);
             factura.setTotal(factura.getSubtotal() + factura.getIva());
-            System.out.println(factura);
+            try {
+                controladorFactura.create(factura);
+                JOptionPane.showMessageDialog(null, "Factura creada");
+            } catch (PSQLException ex) {
+                ex.printStackTrace();
+            }
+            for (Detalle detalle : factura.getDetalles()) {
+                try {
+                    controladorDetalle.create(detalle, factura.getNumeroFactura());
+                } catch (PSQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
+        facturas = new ArrayList<>();
     }//GEN-LAST:event_btnFacturaActionPerformed
 
     private void btnCerrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar1ActionPerformed
@@ -350,6 +421,7 @@ public class Prueba extends javax.swing.JFrame {
                 clienteEncontrado = true;
                 break;
             }
+            factura.setTiempoEspera(System.currentTimeMillis());
         }
         if (clienteEncontrado == false) {
             Detalle detalle = new Detalle();
@@ -361,6 +433,37 @@ public class Prueba extends javax.swing.JFrame {
             factura.setCliente(clienteEstante);
             factura.getDetalles().add(detalle);
             facturas.add(factura);
+        }
+
+    }
+
+    public void generarFactura() {
+        for (int i = 0; i < facturas.size(); i++) {
+            Factura factura = facturas.get(i);
+            if (System.currentTimeMillis() - factura.getTiempoEspera() > 17000) {
+                factura.setNumeroFactura(controladorFactura.getCodigo());
+                double subtotal = 0;
+                for (Detalle detalle : factura.getDetalles()) {
+                    subtotal += detalle.getSubtotal();
+                }
+                factura.setSubtotal(subtotal);
+                factura.setIva(factura.getSubtotal() * 0.12);
+                factura.setTotal(factura.getSubtotal() + factura.getIva());
+                try {
+                    controladorFactura.create(factura);
+                    JOptionPane.showMessageDialog(null, "Factura creada");
+                } catch (PSQLException ex) {
+                    ex.printStackTrace();
+                }
+                for (Detalle detalle : factura.getDetalles()) {
+                    try {
+                        controladorDetalle.create(detalle, factura.getNumeroFactura());
+                    } catch (PSQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                facturas.remove(i);
+            }
         }
     }
 

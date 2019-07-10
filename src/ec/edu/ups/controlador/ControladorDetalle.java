@@ -32,7 +32,7 @@ public class ControladorDetalle {
     }
 
     public void obtenerCodigo(){
-        String sql = "SELECT MAX(\"PRO_CODIGO\") FROM \"PRODUCTO\";";
+        String sql = "SELECT MAX(\"DET_CODIGO\") FROM \"DETALLE\";";
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
@@ -49,20 +49,22 @@ public class ControladorDetalle {
         }
     }
     
-    public void create(Detalle detalle) throws PSQLException{
-        String sql = "INSERT INTO \"DETALLE\" VALUES(" + detalle.getCodigo()+ ", "
+    public void create(Detalle detalle, int codigoFactura) throws PSQLException{
+        String sql = "INSERT INTO \"DETALLE\" VALUES(" + codigo + ", "
                 + detalle.getPrecio()+ ", "
                 + detalle.getCantidad()+ ", "
                 + detalle.getSubtotal()+ ", "
-                + detalle.getProducto().getCodigoProducto()
+                + detalle.getProducto().getCodigoProducto()+ ", "
+                + codigoFactura
                 + ");";
-
+        codigo++;
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             sta.execute(sql);
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             ServerErrorMessage serverError = new ServerErrorMessage("");
             throw new PSQLException(serverError);
         }

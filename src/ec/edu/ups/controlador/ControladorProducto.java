@@ -97,7 +97,6 @@ public class ControladorProducto {
         Producto producto = new Producto();
         try {
             String sql = "SELECT * FROM \"PRODUCTO\" WHERE \"PRO_CODIGO\" = " + codigo + ";";
-            System.out.println(sql);
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);
