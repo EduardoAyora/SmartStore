@@ -15,8 +15,12 @@ import ec.edu.ups.modelo.Estante;
 import ec.edu.ups.modelo.Factura;
 import ec.edu.ups.modelo.Pin;
 import ec.edu.ups.modelo.Producto;
+import gnu.io.NRSerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +32,9 @@ import org.postgresql.util.PSQLException;
  *
  * @author Eduardo Ayora
  */
-public class Prueba extends javax.swing.JFrame {
+public class Prueba extends javax.swing.JFrame implements SerialPortEventListener{
 
+    private NRSerialPort puertoUSB;
     ControladorProducto controladorProducto;
     ControladorCliente controladorCliente;
     ControladorFactura controladorFactura;
@@ -468,6 +473,36 @@ public class Prueba extends javax.swing.JFrame {
         }
     }
 
+    public void conectar(){
+        try{
+            puertoUSB = new NRSerialPort("COM6", 9600);
+            puertoUSB.connect();
+            //Agregar para recibir
+            puertoUSB.notifyOnDataAvailable(true);
+            puertoUSB.addEventListener(this);
+        }catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }        
+    }
+    
+    @Override
+    public void serialEvent(SerialPortEvent evento) {
+        try{
+            if(evento.getEventType() == SerialPortEvent.DATA_AVAILABLE){
+                DataInputStream lectura = new DataInputStream(puertoUSB.getInputStream());
+                if(lectura.available() > 0){
+                    int valor = lectura.read();
+                    if(valor == 50){
+                        JOptionPane.showMessageDialog(this, "Hay una peticion de Arduino");
+                    }
+                }
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
