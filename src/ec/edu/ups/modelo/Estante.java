@@ -60,5 +60,10 @@ public class Estante {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
+
+    @Override
+    public String toString() {
+        return "Estante{" + "codigo=" + codigo + ", abierto=" + abierto + ", seleccionado=" + seleccionado + ", producto=" + producto + ", cliente=" + cliente + '}';
+    }
     
 }
