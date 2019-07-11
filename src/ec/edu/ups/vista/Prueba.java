@@ -38,16 +38,8 @@ public class Prueba extends javax.swing.JFrame {
     ControladorDetalle controladorDetalle;
     List<Pin> pines;
     List<Estante> estantes;
-    /*
-    Estante estante1;
-    Estante estante2;
-    Pin pin1;
-    Pin pin2;
-    Pin pin3;
-    Pin pin4;*/
     List<Factura> facturas;
     Cliente cliente;
-    private boolean aceptar;
 
     /**
      * Creates new form Prueba
@@ -63,26 +55,18 @@ public class Prueba extends javax.swing.JFrame {
         controladorDetalle = new ControladorDetalle();
         pines = new ControladorPin().listar();
         estantes = new ControladorEstante().listar();
-        paraPruebas();
+        emparejarPinesEstantes();
         iniciarTimer();
     }
-
-    public void paraPruebas() {
-        /*
-        estante1 = new Estante();
-        estante2 = new Estante();
-        estante1.setCodigo(1);
-        estante1.setProducto(controladorProducto.read(1));
-        estante2.setCodigo(2);
-        estante2.setProducto(controladorProducto.read(2));
-        pin1 = new Pin(false);
-        pin1.setEstante(estante1);
-        pin2 = new Pin(false);
-        pin1.setEstante(estante1);
-        pin3 = new Pin(false);
-        pin1.setEstante(estante2);
-        pin4 = new Pin(false);
-        pin1.setEstante(estante2);*/
+    
+    public void emparejarPinesEstantes(){
+        for(Pin pin : pines){
+            for(Estante estante : estantes){
+                if(pin.getEstante().getCodigo() == estante.getCodigo()){
+                    pin.setEstante(estante);
+                }
+            }
+        }
     }
 
     public void iniciarTimer() {
@@ -95,7 +79,7 @@ public class Prueba extends javax.swing.JFrame {
         timer.start();
     }
 
-    public void llegoPinArduino(int datoArduino){
+    public void llegoPinArduino(int datoArduino) {
         Cliente clienteEstante = pines.get(datoArduino - 1).getEstante().getCliente();
         if (clienteEstante != null && pines.get(datoArduino - 1).getEstante().isAbierto() && pines.get(datoArduino - 1).isActivado() == false) {
             Producto producto = pines.get(datoArduino - 1).getEstante().getProducto();
@@ -104,15 +88,16 @@ public class Prueba extends javax.swing.JFrame {
             pines.get(datoArduino - 1).setActivado(true);
         }
     }
-    
-    public void llegoTarjetaArduino(String usuario){
+
+    public void llegoTarjetaArduino(String usuario) {
         cliente = controladorCliente.findByCedula(usuario);
+        System.out.println(cliente);
     }
-    
-    public void estanteSeleccionado(int estante){
+
+    public void estanteSeleccionado(int estante) {
         if (cliente != null) {
             if (estantes.get(estante - 1).isAbierto() == false) {
-                System.out.println("No esta abierto estante 1, se ha seleccionado");
+                System.out.println("No esta abierto estante, se ha seleccionado");
                 estantes.get(estante - 1).setSeleccionado(true);
                 estantes.get(estante - 1).setCliente(cliente);
             } else {
@@ -121,6 +106,10 @@ public class Prueba extends javax.swing.JFrame {
         }
     }
     
+    public void cerrarEstante(int codigoArduino){
+        estantes.get(codigoArduino - 1).setAbierto(false);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -350,15 +339,14 @@ public class Prueba extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         // TODO add your handling code here:
         cliente = null;
-        if (estante1.isSeleccionado()) {
-            System.out.println("Esta seleccionado estante 1");
-            estante1.setAbierto(true);
-            estante1.setSeleccionado(false);
-        }
-        if (estante2.isSeleccionado()) {
-            System.out.println("Esta seleccionado estante 2");
-            estante2.setAbierto(true);
-            estante2.setSeleccionado(false);
+        int contador = 1;
+        for (Estante estante : estantes) {
+            if (estante.isSeleccionado()) {
+                System.out.println("Esta seleccionado estante " + contador);
+                estante.setAbierto(true);
+                estante.setSeleccionado(false);
+            }
+            contador++;
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -392,14 +380,18 @@ public class Prueba extends javax.swing.JFrame {
 
     private void btnCerrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar1ActionPerformed
         // TODO add your handling code here:
-        estante1.setAbierto(false);
+        int codigoArduino = 1;
+        cerrarEstante(codigoArduino);
     }//GEN-LAST:event_btnCerrar1ActionPerformed
 
     private void btnCerrar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar2ActionPerformed
         // TODO add your handling code here:
-        estante2.setAbierto(false);
+        int codigoArduino = 2;
+        cerrarEstante(codigoArduino);
     }//GEN-LAST:event_btnCerrar2ActionPerformed
 
+    
+    
     public void facturacion(Cliente clienteEstante, Producto producto) {
         boolean clienteEncontrado = false;
         for (Factura factura : facturas) {

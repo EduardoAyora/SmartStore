@@ -75,7 +75,7 @@ public class ControladorEstante {
         Estante estante = new Estante();
         
         try {
-            String sql = "SELECT * FROM \"ESTANTE\"";
+            String sql = "SELECT * FROM \"ESTANTE\" WHERE \"EST_CODIGO\" = " + codigo + ";";
             System.out.println(sql);
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();

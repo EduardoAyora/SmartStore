@@ -42,5 +42,12 @@ public class Pin {
     public void setEstante(Estante estante) {
         this.estante = estante;
     }
+
+    @Override
+    public String toString() {
+        return "Pin{" + "codigo=" + codigo + ", activado=" + activado + ", estante=" + estante + '}';
+    }
+    
+    
     
 }
