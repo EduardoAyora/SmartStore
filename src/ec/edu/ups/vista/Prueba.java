@@ -37,14 +37,14 @@ import org.postgresql.util.PSQLException;
 public class Prueba extends javax.swing.JFrame implements SerialPortEventListener{
 
     private NRSerialPort puertoUSB;
-    ControladorProducto controladorProducto;
-    ControladorCliente controladorCliente;
-    ControladorFactura controladorFactura;
-    ControladorDetalle controladorDetalle;
-    List<Pin> pines;
-    List<Estante> estantes;
-    List<Factura> facturas;
-    Cliente cliente;
+    private ControladorProducto controladorProducto;
+    private ControladorCliente controladorCliente;
+    private ControladorFactura controladorFactura;
+    private ControladorDetalle controladorDetalle;
+    private List<Pin> pines;
+    private List<Estante> estantes;
+    private List<Factura> facturas;
+    private Cliente cliente;
 
     /**
      * Creates new form Prueba
@@ -62,6 +62,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         estantes = new ControladorEstante().listar();
         emparejarPinesEstantes();
         iniciarTimer();
+        //conectar();
     }
     
     public void emparejarPinesEstantes(){
