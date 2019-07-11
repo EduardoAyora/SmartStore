@@ -7,7 +7,9 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ControladorCliente;
 import ec.edu.ups.controlador.ControladorDetalle;
+import ec.edu.ups.controlador.ControladorEstante;
 import ec.edu.ups.controlador.ControladorFactura;
+import ec.edu.ups.controlador.ControladorPin;
 import ec.edu.ups.controlador.ControladorProducto;
 import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Detalle;
@@ -34,12 +36,15 @@ public class Prueba extends javax.swing.JFrame {
     ControladorCliente controladorCliente;
     ControladorFactura controladorFactura;
     ControladorDetalle controladorDetalle;
+    List<Pin> pines;
+    List<Estante> estantes;
+    /*
     Estante estante1;
     Estante estante2;
     Pin pin1;
     Pin pin2;
     Pin pin3;
-    Pin pin4;
+    Pin pin4;*/
     List<Factura> facturas;
     Cliente cliente;
     private boolean aceptar;
@@ -56,10 +61,14 @@ public class Prueba extends javax.swing.JFrame {
         controladorCliente = new ControladorCliente();
         controladorFactura = new ControladorFactura();
         controladorDetalle = new ControladorDetalle();
+        pines = new ControladorPin().listar();
+        estantes = new ControladorEstante().listar();
         paraPruebas();
+        iniciarTimer();
     }
 
     public void paraPruebas() {
+        /*
         estante1 = new Estante();
         estante2 = new Estante();
         estante1.setCodigo(1);
@@ -67,10 +76,13 @@ public class Prueba extends javax.swing.JFrame {
         estante2.setCodigo(2);
         estante2.setProducto(controladorProducto.read(2));
         pin1 = new Pin(false);
+        pin1.setEstante(estante1);
         pin2 = new Pin(false);
+        pin1.setEstante(estante1);
         pin3 = new Pin(false);
+        pin1.setEstante(estante2);
         pin4 = new Pin(false);
-        iniciarTimer();
+        pin1.setEstante(estante2);*/
     }
 
     public void iniciarTimer() {
@@ -83,6 +95,32 @@ public class Prueba extends javax.swing.JFrame {
         timer.start();
     }
 
+    public void llegoPinArduino(int datoArduino){
+        Cliente clienteEstante = pines.get(datoArduino - 1).getEstante().getCliente();
+        if (clienteEstante != null && pines.get(datoArduino - 1).getEstante().isAbierto() && pines.get(datoArduino - 1).isActivado() == false) {
+            Producto producto = pines.get(datoArduino - 1).getEstante().getProducto();
+            System.out.println(clienteEstante);
+            facturacion(clienteEstante, producto);
+            pines.get(datoArduino - 1).setActivado(true);
+        }
+    }
+    
+    public void llegoTarjetaArduino(String usuario){
+        cliente = controladorCliente.findByCedula(usuario);
+    }
+    
+    public void estanteSeleccionado(int estante){
+        if (cliente != null) {
+            if (estantes.get(estante - 1).isAbierto() == false) {
+                System.out.println("No esta abierto estante 1, se ha seleccionado");
+                estantes.get(estante - 1).setSeleccionado(true);
+                estantes.get(estante - 1).setCliente(cliente);
+            } else {
+                System.out.println("No puede seleccionar");
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -262,85 +300,51 @@ public class Prueba extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.out.println("Edu esta usando la tarjeta");
         String usuario = "0101010101";
-        cliente = controladorCliente.findByCedula(usuario);
+        llegoTarjetaArduino(usuario);
     }//GEN-LAST:event_btnEduActionPerformed
 
     private void btnKarenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKarenActionPerformed
         // TODO add your handling code here:
         System.out.println("Karen esta usando la tarjeta");
         String usuario = "0202020202";
-        cliente = controladorCliente.findByCedula(usuario);
+        llegoTarjetaArduino(usuario);
     }//GEN-LAST:event_btnKarenActionPerformed
 
     private void btnP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP1ActionPerformed
         // TODO add your handling code here:
-        Cliente clienteEstante = estante1.getCliente();
-        if (clienteEstante != null && estante1.isAbierto() && pin1.isActivado() == false) {
-            Producto producto = estante1.getProducto();
-            System.out.println(clienteEstante);
-            facturacion(clienteEstante, producto);
-            pin1.setActivado(true);
-        }
+        int datoArduino = 1;
+        llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP1ActionPerformed
 
     private void btnP22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP22ActionPerformed
         // TODO add your handling code here:
-        Cliente clienteEstante = estante2.getCliente();
-        if (clienteEstante != null && estante2.isAbierto() && pin4.isActivado() == false) {
-            Producto producto = estante2.getProducto();
-            System.out.println(clienteEstante);
-            facturacion(clienteEstante, producto);
-            pin4.setActivado(true);
-        }
+        int datoArduino = 4;
+        llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP22ActionPerformed
 
     private void btnP11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP11ActionPerformed
         // TODO add your handling code here:
-        Cliente clienteEstante = estante1.getCliente();
-        if (clienteEstante != null && estante1.isAbierto() && pin2.isActivado() == false) {
-            Producto producto = estante1.getProducto();
-            System.out.println(clienteEstante);
-            facturacion(clienteEstante, producto);
-            pin2.setActivado(true);
-        }
+        int datoArduino = 2;
+        llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP11ActionPerformed
 
     private void btnP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP2ActionPerformed
         // TODO add your handling code here:
-        Cliente clienteEstante = estante2.getCliente();
-        if (clienteEstante != null && estante2.isAbierto() && pin3.isActivado() == false) {
-            Producto producto = estante2.getProducto();
-            System.out.println(clienteEstante);
-            facturacion(clienteEstante, producto);
-            pin3.setActivado(true);
-        }
+        int datoArduino = 3;
+        llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP2ActionPerformed
 
     private void btnCaja1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja1ActionPerformed
         // TODO add your handling code here:
-        if (cliente != null) {
-            if (estante1.isAbierto() == false) {
-                System.out.println("No esta abierto estante 1, se ha seleccionado");
-                estante1.setSeleccionado(true);
-                estante1.setCliente(cliente);
-            } else {
-                System.out.println("No puede seleccionar");
-            }
-        }
+        int estante = 1;
+        estanteSeleccionado(estante);
         btnCaja1.setSelected(false);
     }//GEN-LAST:event_btnCaja1ActionPerformed
 
     private void btnCaja2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja2ActionPerformed
         // TODO add your handling code here:
-        if (cliente != null) {
-            if (estante2.isAbierto() == false) {
-                System.out.println("No esta abierto estante 2, se ha seleccionado");
-                estante2.setSeleccionado(true);
-                estante2.setCliente(cliente);
-            } else {
-                System.out.println("No puede seleccionar");
-            }
-        }
+        int estante = 2;
+        estanteSeleccionado(estante);
     }//GEN-LAST:event_btnCaja2ActionPerformed
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
