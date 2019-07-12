@@ -29,18 +29,19 @@ public class ControladorFactura {
     
     public ControladorFactura() {
         miBaseDatos = new BaseDatos();
-        obtenerCodigo();
+        codigo = getCodigo();
     }
     
-    public void obtenerCodigo(){
-        String sql = "SELECT MAX(\"PRO_CODIGO\") FROM \"PRODUCTO\";";
+    public int getCodigo(){
+        int codigoFactura = 0;
+        String sql = "SELECT MAX(\"FAC_CODIGO\") FROM \"FACTURA\";";
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);
             if (rs.next()) {
-                codigo = rs.getInt(1);
-                codigo++;
+                codigoFactura = rs.getInt(1);
+                codigoFactura++;
             }
             rs.close();
             sta.close();
@@ -48,25 +49,27 @@ public class ControladorFactura {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+        return codigoFactura;
     }
 
     public void create(Factura factura) throws PSQLException{
         Format formato = new SimpleDateFormat("yyyy-MM-dd");
         String fecha = formato.format(factura.getFecha());
-        String sql = "INSERT INTO \"FACTURA\" VALUES(" + factura.getNumeroFactura()+ ", '"
+        String sql = "INSERT INTO \"FACTURA\" VALUES(" + codigo + ", '"
                 + fecha + "', '"
                 + factura.getCliente().getCedula() + "', "
                 + factura.getSubtotal() + ", "
                 + factura.getIva()+ ", "
                 + factura.getTotal()+ ", "
                 + factura.isActivo()+ ");";
-
+        codigo++;
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             sta.execute(sql);
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             ServerErrorMessage serverError = new ServerErrorMessage("");
             throw new PSQLException(serverError);
         }

@@ -84,7 +84,6 @@ public class ControladorCliente{
         Cliente persona = new Cliente();
         try {
             String sql = "SELECT * FROM \"CLIENTE\" WHERE \"CLI_CEDULA\" = '" + cedula + "';";
-            System.out.println(sql);
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);

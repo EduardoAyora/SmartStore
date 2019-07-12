@@ -24,9 +24,11 @@ public class Factura {
     private double iva;
     private double total;
     private boolean activo;
+    private long tiempoEspera;
     private List<Detalle> detalles;
 
     public Factura() {
+        tiempoEspera = System.currentTimeMillis();
         activo = true;
         fecha = new Date();
         detalles = new ArrayList<>();
@@ -41,6 +43,16 @@ public class Factura {
         this.total = total;
     }
 
+    public long getTiempoEspera() {
+        return tiempoEspera;
+    }
+
+    public void setTiempoEspera(long tiempoEspera) {
+        this.tiempoEspera = tiempoEspera;
+    }
+
+    
+    
     public boolean isActivo() {
         return activo;
     }

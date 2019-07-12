@@ -13,11 +13,20 @@ public class Estante {
     
     private int codigo;
     private boolean abierto;
+    private boolean seleccionado;
     private Producto producto;
     private Cliente cliente;
 
     public Estante() {
         abierto = false;
+    }
+
+    public boolean isSeleccionado() {
+        return seleccionado;
+    }
+
+    public void setSeleccionado(boolean seleccionado) {
+        this.seleccionado = seleccionado;
     }
 
     public Cliente getCliente() {
@@ -50,6 +59,11 @@ public class Estante {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+
+    @Override
+    public String toString() {
+        return "Estante{" + "codigo=" + codigo + ", abierto=" + abierto + ", seleccionado=" + seleccionado + ", producto=" + producto + ", cliente=" + cliente + '}';
     }
     
 }
