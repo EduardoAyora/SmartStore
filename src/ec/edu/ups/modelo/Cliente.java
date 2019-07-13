@@ -21,17 +21,27 @@ public class Cliente {
     private String celular;
     private String correo;
     private String direccion;
+    private String codigoTarjeta;
 
     public Cliente() {
     }
 
-    public Cliente(String cedula, String nombre, String apellido, String celular, String correo, String direccion) {
+    public Cliente(String cedula, String nombre, String apellido, String celular, String correo, String direccion, String codigoTarjeta) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
         this.celular = celular;
         this.correo = correo;
         this.direccion = direccion;
+        this.codigoTarjeta = codigoTarjeta;
+    }
+
+    public String getCodigoTarjeta() {
+        return codigoTarjeta;
+    }
+
+    public void setCodigoTarjeta(String codigoTarjeta) {
+        this.codigoTarjeta = codigoTarjeta;
     }
 
     public String getDireccion() {

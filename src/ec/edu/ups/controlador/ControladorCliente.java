@@ -36,7 +36,8 @@ public class ControladorCliente{
                 + persona.getApellido() + "', '"
                 + persona.getCelular()+ "', '"
                 + persona.getCorreo() + "', '" 
-                + persona.getDireccion()+ "');";
+                + persona.getDireccion()+ "', '"
+                + persona.getCodigoTarjeta()+ "');";
 
         miBaseDatos.conectar();
         try {
@@ -67,7 +68,8 @@ public class ControladorCliente{
                 + "\"CLI_APELLIDO\" = '" + persona.getApellido() + "',"
                 + "\"CLI_CELULAR\" = '" + persona.getCelular() + "',"
                 + "\"CLI_CORREO\" = '" + persona.getCorreo() + "',"
-                + "\"CLI_DIRECCION\" = '" + persona.getCorreo()
+                + "\"CLI_DIRECCION\" = '" + persona.getCorreo() + "', '"
+                + "\"CLI_TARJETA\" = '" + persona.getCodigoTarjeta()
                 + " WHERE \"CLI_CEDULA\" = '" + persona.getCedula() + "';";
         miBaseDatos.conectar();
 
@@ -94,6 +96,7 @@ public class ControladorCliente{
                 persona.setCelular(rs.getString("CLI_CELULAR"));
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
+                persona.setCodigoTarjeta(rs.getString("CLI_TARJETA"));
             }
             rs.close();
             sta.close();
@@ -104,32 +107,32 @@ public class ControladorCliente{
         return persona;
     }
     
-    /*
-    public List<Direccion> listarDirecciones(String cedula){
-        List<Direccion> direcciones = new ArrayList<>();
+    public Cliente findByTarjeta(String tarjeta) throws PSQLException{
+        Cliente persona = new Cliente();
         try {
-            String sql = "SELECT * FROM \"DIRECCION\" WHERE \"PER_CEDULA\" = '" + cedula + "';";
-            System.out.println(sql);
+            String sql = "SELECT * FROM \"CLIENTE\" WHERE \"CLI_TARJETA\" = '" + tarjeta + "';";
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);
             while (rs.next()) {
-                Direccion direccion = new Direccion();
-                direccion.setCodigo(rs.getInt("DIR_CODIGO"));
-                direccion.setCallePrincipal(rs.getString("DIR_CALLE_PRINCIPAL"));
-                direccion.setCalleSecundaria(rs.getString("DIR_CALLE_SECUNDARIA"));
-                direccion.setNumero(rs.getInt("DIR_NUMERO"));
-                direccion.setCedulaPersona(rs.getString("PER_CEDULA"));
-                direcciones.add(direccion);
+                persona.setCedula("CLI_CEDULA");
+                persona.setNombre(rs.getString("CLI_NOMBRE"));
+                persona.setApellido(rs.getString("CLI_APELLIDO"));
+                persona.setCelular(rs.getString("CLI_CELULAR"));
+                persona.setCorreo(rs.getString("CLI_CORREO"));
+                persona.setDireccion(rs.getString("CLI_DIRECCION"));
+                persona.setCodigoTarjeta(rs.getString(tarjeta));
             }
             rs.close();
             sta.close();
             miBaseDatos.desconectar();
         } catch (Exception ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
-        return direcciones;
-    }*/
+        return persona;
+    }
     
     public List<Cliente> listar(){
         List<Cliente> personas = new ArrayList<>();
@@ -148,6 +151,7 @@ public class ControladorCliente{
                 persona.setCelular(rs.getString("CLI_CELULAR"));
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
+                persona.setCodigoTarjeta(rs.getString("CLI_TARJETA"));
                 personas.add(persona);
             }
             rs.close();

@@ -17,14 +17,19 @@ import ec.edu.ups.modelo.Estante;
 import ec.edu.ups.modelo.Factura;
 import ec.edu.ups.modelo.Pin;
 import ec.edu.ups.modelo.Producto;
+import gnu.io.CommPort;
+import gnu.io.CommPortIdentifier;
 import gnu.io.NRSerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -34,9 +39,10 @@ import org.postgresql.util.PSQLException;
  *
  * @author Eduardo Ayora
  */
-public class Prueba extends javax.swing.JFrame implements SerialPortEventListener{
+public class Prueba extends javax.swing.JFrame implements SerialPortEventListener {
 
     private NRSerialPort puertoUSB;
+    private NRSerialPort puertoSensor;
     private ControladorProducto controladorProducto;
     private ControladorCliente controladorCliente;
     private ControladorFactura controladorFactura;
@@ -62,13 +68,13 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         estantes = new ControladorEstante().listar();
         emparejarPinesEstantes();
         iniciarTimer();
-        //conectar();
+        conectar();
     }
-    
-    public void emparejarPinesEstantes(){
-        for(Pin pin : pines){
-            for(Estante estante : estantes){
-                if(pin.getEstante().getCodigo() == estante.getCodigo()){
+
+    public void emparejarPinesEstantes() {
+        for (Pin pin : pines) {
+            for (Estante estante : estantes) {
+                if (pin.getEstante().getCodigo() == estante.getCodigo()) {
                     pin.setEstante(estante);
                 }
             }
@@ -111,8 +117,8 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             }
         }
     }
-    
-    public void cerrarEstante(int codigoArduino){
+
+    public void cerrarEstante(int codigoArduino) {
         estantes.get(codigoArduino - 1).setAbierto(false);
     }
 
@@ -396,8 +402,6 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         cerrarEstante(codigoArduino);
     }//GEN-LAST:event_btnCerrar2ActionPerformed
 
-    
-    
     public void facturacion(Cliente clienteEstante, Producto producto) {
         boolean clienteEncontrado = false;
         for (Factura factura : facturas) {
@@ -470,36 +474,62 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         }
     }
 
-    public void conectar(){
-        try{
-            puertoUSB = new NRSerialPort("COM6", 9600);
+    public void conectar() {
+        try {
+            puertoUSB = new NRSerialPort("COM8", 9600);
             puertoUSB.connect();
             //Agregar para recibir
             puertoUSB.notifyOnDataAvailable(true);
             puertoUSB.addEventListener(this);
-        }catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }        
-    }
-    
-    @Override
-    public void serialEvent(SerialPortEvent evento) {
-        try{
-            if(evento.getEventType() == SerialPortEvent.DATA_AVAILABLE){
-                DataInputStream lectura = new DataInputStream(puertoUSB.getInputStream());
-                if(lectura.available() > 0){
-                    int valor = lectura.read();
-                    if(valor == 50){
-                        JOptionPane.showMessageDialog(this, "Hay una peticion de Arduino");
-                    }
-                }
-            }
-        }catch(Exception ex){
+
+            puertoSensor = new NRSerialPort("COM7", 9600);
+            puertoSensor.connect();
+            //Agregar para recibir
+            puertoSensor.notifyOnDataAvailable(true);
+            puertoSensor.addEventListener(this);
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-    
+
+    @Override
+    public void serialEvent(SerialPortEvent evento) {
+        try {
+            if (evento.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+                DataInputStream lectura = new DataInputStream(puertoUSB.getInputStream());
+                if (lectura.available() > 0) {
+                    try {
+                        System.out.println("Orden dada");
+                        BufferedReader input = new BufferedReader(new InputStreamReader(puertoUSB.getInputStream()));
+                        String entrada = input.readLine();
+                        System.out.println(entrada);
+                        System.out.println("Tamaño: " + entrada.length());
+                        try{
+                            cliente = controladorCliente.findByTarjeta(entrada);
+                            estanteSeleccionado(1);
+                        }catch(PSQLException ex){
+                            JOptionPane.showMessageDialog(null, "No esta registrado");
+                            ex.printStackTrace();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                
+                DataInputStream lecturaSensor = new DataInputStream(puertoSensor.getInputStream());
+                if (lecturaSensor.available() > 0) {
+                    int valor = lecturaSensor.read();
+                    System.out.println(valor);
+                    if (valor == 4) {
+                        llegoPinArduino(1);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
