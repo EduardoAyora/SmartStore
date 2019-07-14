@@ -115,13 +115,13 @@ public class ControladorCliente{
             Statement sta = miBaseDatos.getConexionBD().createStatement();
             ResultSet rs = sta.executeQuery(sql);
             while (rs.next()) {
-                persona.setCedula("CLI_CEDULA");
+                persona.setCedula(rs.getString("CLI_CEDULA"));
                 persona.setNombre(rs.getString("CLI_NOMBRE"));
                 persona.setApellido(rs.getString("CLI_APELLIDO"));
                 persona.setCelular(rs.getString("CLI_CELULAR"));
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
-                persona.setCodigoTarjeta(rs.getString(tarjeta));
+                persona.setCodigoTarjeta(tarjeta);
             }
             rs.close();
             sta.close();

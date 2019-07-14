@@ -92,12 +92,16 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
     }
 
     public void llegoPinArduino(int datoArduino) {
-        Cliente clienteEstante = pines.get(datoArduino - 1).getEstante().getCliente();
-        if (clienteEstante != null && pines.get(datoArduino - 1).getEstante().isAbierto() && pines.get(datoArduino - 1).isActivado() == false) {
-            Producto producto = pines.get(datoArduino - 1).getEstante().getProducto();
+        Cliente clienteEstante = pines.get(datoArduino).getEstante().getCliente();
+        System.out.println(pines.get(datoArduino).getEstante().getProducto());
+        System.out.println("Cliente :" + clienteEstante != null);
+        System.out.println("Pines :" + pines.get(datoArduino).getEstante().isAbierto());
+        System.out.println("ultimo: " + pines.get(datoArduino).isActivado());
+        if (clienteEstante != null && pines.get(datoArduino).getEstante().isAbierto() && pines.get(datoArduino).isActivado() == false) {
+            Producto producto = pines.get(datoArduino).getEstante().getProducto();
             System.out.println(clienteEstante);
             facturacion(clienteEstante, producto);
-            pines.get(datoArduino - 1).setActivado(true);
+            pines.get(datoArduino).setActivado(true);
         }
     }
 
@@ -476,13 +480,13 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
 
     public void conectar() {
         try {
-            puertoUSB = new NRSerialPort("COM8", 9600);
+            puertoUSB = new NRSerialPort("COM6", 9600);
             puertoUSB.connect();
             //Agregar para recibir
             puertoUSB.notifyOnDataAvailable(true);
             puertoUSB.addEventListener(this);
 
-            puertoSensor = new NRSerialPort("COM7", 9600);
+            puertoSensor = new NRSerialPort("COM8", 9600);
             puertoSensor.connect();
             //Agregar para recibir
             puertoSensor.notifyOnDataAvailable(true);
@@ -506,7 +510,9 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                         System.out.println("Tamaño: " + entrada.length());
                         try{
                             cliente = controladorCliente.findByTarjeta(entrada);
-                            estanteSeleccionado(1);
+                            System.out.println(cliente);
+                            estantes.get(0).setAbierto(true);
+                            estantes.get(0).setCliente(cliente);
                         }catch(PSQLException ex){
                             JOptionPane.showMessageDialog(null, "No esta registrado");
                             ex.printStackTrace();
@@ -519,10 +525,9 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                 DataInputStream lecturaSensor = new DataInputStream(puertoSensor.getInputStream());
                 if (lecturaSensor.available() > 0) {
                     int valor = lecturaSensor.read();
+                    valor -= 20;
                     System.out.println(valor);
-                    if (valor == 4) {
-                        llegoPinArduino(1);
-                    }
+                    llegoPinArduino(valor);
                 }
             }
         } catch (Exception ex) {
