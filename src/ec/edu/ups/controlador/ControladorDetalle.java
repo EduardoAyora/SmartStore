@@ -150,5 +150,33 @@ public class ControladorDetalle {
         return detalles;
     }
     
+    public List<Detalle> detallesFactura(int codigo){
+        List<Detalle> detalles = new ArrayList<>();
+        
+        try {
+            String sql = "SELECT * FROM \"DETALLE\" WHERE \"FAC_CODIGO\" = " + codigo;
+            System.out.println(sql);
+            miBaseDatos.conectar();
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            ResultSet rs = sta.executeQuery(sql);
+            while (rs.next()) {
+                Detalle detalle = new Detalle();
+                detalle.setCodigo(rs.getInt("DET_CODIGO"));
+                detalle.setCantidad(rs.getInt("DET_CANTIDAD"));
+                detalle.setPrecio(rs.getDouble("DET_PRECIO"));
+                detalle.setSubtotal(rs.getInt("DET_SUBTOTAL"));
+                detalle.setProducto(new ControladorProducto().read(rs.getInt("PRO_CODIGO")));
+                detalles.add(detalle);
+            }
+            rs.close();
+            sta.close();
+            miBaseDatos.desconectar();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        return detalles;
+    }
+    
     
 }

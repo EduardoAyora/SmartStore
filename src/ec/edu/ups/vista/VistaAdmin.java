@@ -5,7 +5,10 @@
  */
 package ec.edu.ups.vista;
 
+import ec.edu.ups.controlador.ControladorFactura;
 import ec.edu.ups.modelo.ClaveAdmin;
+import ec.edu.ups.modelo.Factura;
+import ec.edu.ups.modelo.Render;
 import ec.edu.ups.vista.persona.VistaActualizarPersona;
 import ec.edu.ups.vista.persona.VistaCrearPersona;
 import ec.edu.ups.vista.persona.VistaListarPersonas;
@@ -15,6 +18,9 @@ import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,16 +30,37 @@ public class VistaAdmin extends javax.swing.JFrame {
 
     private CambioContrasenia cambioContrasenia;
     private ClaveAdmin claveAdmin;
+    private ControladorFactura controladorFactura;
 
     /**
      * Creates new form VistaPrincipal
      */
     public VistaAdmin() {
         initComponents();
+        controladorFactura = new ControladorFactura();
         claveAdmin = new ClaveAdmin();
         this.setExtendedState(MAXIMIZED_BOTH);
+        tabFactura.setRowHeight(40);
+        llenarDatos();
     }
 
+    public void llenarDatos(){
+        tabFactura.setDefaultRenderer(Object.class, new Render());
+        JButton btnVer = new JButton("Ver");
+        DefaultTableModel modelo = (DefaultTableModel) tabFactura.getModel();
+        List<Factura> lista = controladorFactura.listar();
+        for (Factura factura : lista) {
+            Object[] datos = {factura.getNumeroFactura(),
+                factura.getFecha(),
+                factura.getCliente().getNombre(),
+                factura.getTotal(),
+                factura.isActivo(),
+                btnVer
+            };
+            modelo.addRow(datos);
+        }
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,7 +103,7 @@ public class VistaAdmin extends javax.swing.JFrame {
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Administración");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -86,26 +113,41 @@ public class VistaAdmin extends javax.swing.JFrame {
 
         bAnular.setText("Anular");
         bAnular.setToolTipText("");
+        bAnular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bAnularActionPerformed(evt);
+            }
+        });
 
         tabFactura.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Número", "Fecha", "Cliente", "Total", "Estado"
+                "Número", "Fecha", "Cliente", "Total", "Estado", "Ver"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tabFactura.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabFacturaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabFactura);
 
         bBuscarFac.setText("Buscar");
+        bBuscarFac.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarFacActionPerformed(evt);
+            }
+        });
 
         lNumFactura.setText("Número de Factura:");
 
@@ -172,6 +214,11 @@ public class VistaAdmin extends javax.swing.JFrame {
         jSeparator1.setToolTipText("");
 
         bNuevoPro.setText("Nuevo");
+        bNuevoPro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bNuevoProActionPerformed(evt);
+            }
+        });
 
         bEditarPro.setText("Editar");
 
@@ -370,6 +417,43 @@ public class VistaAdmin extends javax.swing.JFrame {
             cambioContrasenia.toFront();
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void bNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoProActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bNuevoProActionPerformed
+
+    private void bAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAnularActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_bAnularActionPerformed
+
+    private void bBuscarFacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarFacActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_bBuscarFacActionPerformed
+
+    private void tabFacturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabFacturaMouseClicked
+        // TODO add your handling code here:
+        try {
+            int columna = tabFactura.getColumnModel().getColumnIndexAtX(evt.getX());
+            int fila = evt.getY() / tabFactura.getRowHeight();
+
+            if (fila < tabFactura.getRowCount() && fila >= 0 && columna < tabFactura.getColumnCount() && columna >= 0) {
+                Object value = tabFactura.getValueAt(fila, columna);
+                if (value instanceof JButton) {
+                    ((JButton) value).doClick();
+                    JButton boton = (JButton) value;
+                    int numFactura = (evt.getY() / tabFactura.getRowHeight()) + 1;
+                    Factura factura = controladorFactura.read(numFactura);
+                    
+                    DetallesFactura detallesFactura = new DetallesFactura(factura);
+                    detallesFactura.setVisible(true);
+                }
+            }
+        } catch (java.lang.IndexOutOfBoundsException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_tabFacturaMouseClicked
 
     /**
      * @param args the command line arguments

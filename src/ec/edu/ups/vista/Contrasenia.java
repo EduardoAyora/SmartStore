@@ -96,12 +96,9 @@ public class Contrasenia extends javax.swing.JFrame {
         if (clavedef.equals(claveAdmin.getClave())) {
             this.dispose();
             JOptionPane.showMessageDialog(null, "Bienvenido", "Aprobado", JOptionPane.INFORMATION_MESSAGE);
-
         } else {
             JOptionPane.showMessageDialog(null, "Contraseña Incorrecta", "Denegado", JOptionPane.INFORMATION_MESSAGE);
         }
-
-
     }//GEN-LAST:event_btnIngresarActionPerformed
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
@@ -121,7 +118,6 @@ public class Contrasenia extends javax.swing.JFrame {
                 vistaAdmin.toFront();
                 vistaAdmin.setVisible(true);
                 VistaMain.vistaAdmin = this.vistaAdmin;
-
             } else {
                 JOptionPane.showMessageDialog(null, "Contraseña Incorrecta", "Denegado", JOptionPane.INFORMATION_MESSAGE);
             }

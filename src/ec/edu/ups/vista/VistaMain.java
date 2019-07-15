@@ -159,9 +159,9 @@ public class VistaMain extends javax.swing.JFrame {
 
     private void bAdministracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAdministracionActionPerformed
         if (vistaAdmin == null || vistaAdmin.isVisible() == false) {
-            contrasenia = new Contrasenia(claveAdmin);
-            contrasenia.toFront();
-            contrasenia.setVisible(true);
+            vistaAdmin = new VistaAdmin();
+            vistaAdmin.toFront();
+            vistaAdmin.setVisible(true);
             this.toBack();
         } else {
             contrasenia.toFront();
