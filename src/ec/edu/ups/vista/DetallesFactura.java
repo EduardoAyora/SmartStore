@@ -34,9 +34,16 @@ public class DetallesFactura extends javax.swing.JFrame {
         controladorDetalle = new ControladorDetalle();
         controladorFactura = new ControladorFactura();
         tblDetalles.setRowHeight(30);
+        boton();
         llenarDatos();
     }
 
+    public void boton(){
+        if(factura.isActivo() == false){
+            btnAnular.setEnabled(false);
+        }
+    }
+    
     public void llenarDatos() {
         Cliente cliente = factura.getCliente();
         txtNumeroFactura.setText(Integer.toString(factura.getNumeroFactura()));
@@ -321,8 +328,8 @@ public class DetallesFactura extends javax.swing.JFrame {
         // TODO add your handling code here:
         int resp = JOptionPane.showConfirmDialog(null, "¿Seguro que desea anular la factura?");
         if (JOptionPane.OK_OPTION == resp) {
-            factura.setActivo(false);
-            
+            controladorFactura.anular(factura.getNumeroFactura());
+            VistaAdmin.tabFactura.setValueAt(false, factura.getNumeroFactura() - 1, 4);
             this.dispose();
         }
 

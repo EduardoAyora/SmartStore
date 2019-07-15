@@ -51,7 +51,7 @@ public class ControladorCliente{
         }
     }
 
-    public void delete(String cedula) {
+    public void delete(String cedula) throws PSQLException{
         String sql = "DELETE FROM \"CLIENTE\" WHERE \"CLI_CEDULA\" = '" + cedula + "';";
         miBaseDatos.conectar();
         try {
@@ -60,6 +60,8 @@ public class ControladorCliente{
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
     }
 
@@ -82,7 +84,7 @@ public class ControladorCliente{
         }
     }
 
-    public Cliente findByCedula(String cedula) {
+    public Cliente findByCedula(String cedula) throws PSQLException{
         Cliente persona = new Cliente();
         try {
             String sql = "SELECT * FROM \"CLIENTE\" WHERE \"CLI_CEDULA\" = '" + cedula + "';";
@@ -103,6 +105,8 @@ public class ControladorCliente{
             miBaseDatos.desconectar();
         } catch (Exception ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
         return persona;
     }

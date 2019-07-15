@@ -87,7 +87,7 @@ public class ControladorFactura {
         }
     }
     
-    public Factura read(int codigo) {
+    public Factura read(int codigo) throws PSQLException{
         Factura factura = new Factura();
         try {
             String sql = "SELECT * FROM \"FACTURA\" WHERE \"FAC_CODIGO\" = " + codigo + ";";
@@ -109,6 +109,8 @@ public class ControladorFactura {
             miBaseDatos.desconectar();
         } catch (Exception ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
         return factura;
     }

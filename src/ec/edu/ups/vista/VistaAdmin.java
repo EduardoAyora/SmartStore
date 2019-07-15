@@ -5,8 +5,11 @@
  */
 package ec.edu.ups.vista;
 
+import ec.edu.ups.controlador.ControladorCliente;
 import ec.edu.ups.controlador.ControladorFactura;
+import ec.edu.ups.controlador.ControladorProducto;
 import ec.edu.ups.modelo.ClaveAdmin;
+import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Factura;
 import ec.edu.ups.modelo.Render;
 import ec.edu.ups.vista.persona.VistaActualizarPersona;
@@ -19,8 +22,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -31,6 +38,8 @@ public class VistaAdmin extends javax.swing.JFrame {
     private CambioContrasenia cambioContrasenia;
     private ClaveAdmin claveAdmin;
     private ControladorFactura controladorFactura;
+    private ControladorCliente controladorCliente;
+    private ControladorProducto controladorProducto;
 
     /**
      * Creates new form VistaPrincipal
@@ -38,13 +47,15 @@ public class VistaAdmin extends javax.swing.JFrame {
     public VistaAdmin() {
         initComponents();
         controladorFactura = new ControladorFactura();
+        controladorCliente = new ControladorCliente();
+        controladorProducto = new ControladorProducto();
         claveAdmin = new ClaveAdmin();
         this.setExtendedState(MAXIMIZED_BOTH);
         tabFactura.setRowHeight(40);
         llenarDatos();
     }
 
-    public void llenarDatos(){
+    public void llenarDatos() {
         tabFactura.setDefaultRenderer(Object.class, new Render());
         JButton btnVer = new JButton("Ver");
         DefaultTableModel modelo = (DefaultTableModel) tabFactura.getModel();
@@ -59,8 +70,9 @@ public class VistaAdmin extends javax.swing.JFrame {
             };
             modelo.addRow(datos);
         }
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,7 +84,6 @@ public class VistaAdmin extends javax.swing.JFrame {
 
         pestaFactura = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        bAnular = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabFactura = new javax.swing.JTable();
         bBuscarFac = new javax.swing.JButton();
@@ -108,14 +119,6 @@ public class VistaAdmin extends javax.swing.JFrame {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-        });
-
-        bAnular.setText("Anular");
-        bAnular.setToolTipText("");
-        bAnular.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bAnularActionPerformed(evt);
             }
         });
 
@@ -164,25 +167,19 @@ public class VistaAdmin extends javax.swing.JFrame {
                         .addComponent(tNumFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bBuscarFac)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(bAnular))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(bAnular))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                            .addComponent(lNumFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tNumFactura)
-                            .addComponent(bBuscarFac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lNumFactura, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tNumFactura)
+                    .addComponent(bBuscarFac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(14, 14, 14)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -223,6 +220,11 @@ public class VistaAdmin extends javax.swing.JFrame {
         bEditarPro.setText("Editar");
 
         bEliminarPro.setText("Eliminar");
+        bEliminarPro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEliminarProActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -279,6 +281,11 @@ public class VistaAdmin extends javax.swing.JFrame {
         bBuscarCli.setText("Buscar");
 
         bNuevoCli.setText("Nuevo");
+        bNuevoCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bNuevoCliActionPerformed(evt);
+            }
+        });
 
         bEditarCli.setText("Editar");
 
@@ -289,7 +296,7 @@ public class VistaAdmin extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código", "Nombre", "Cantidad", "Precio"
+                "Cedula", "Nombre", "Cantidad", "Precio"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -422,14 +429,15 @@ public class VistaAdmin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_bNuevoProActionPerformed
 
-    private void bAnularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAnularActionPerformed
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_bAnularActionPerformed
-
     private void bBuscarFacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarFacActionPerformed
         // TODO add your handling code here:
-        
+        try {
+            Factura factura = controladorFactura.read(Integer.parseInt(tNumFactura.getText()));
+            DetallesFactura detallesFactura = new DetallesFactura(factura);
+            detallesFactura.setVisible(true);
+        } catch (PSQLException ex) {
+            JOptionPane.showMessageDialog(null, "La factura no existe");
+        }
     }//GEN-LAST:event_bBuscarFacActionPerformed
 
     private void tabFacturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabFacturaMouseClicked
@@ -444,10 +452,13 @@ public class VistaAdmin extends javax.swing.JFrame {
                     ((JButton) value).doClick();
                     JButton boton = (JButton) value;
                     int numFactura = (evt.getY() / tabFactura.getRowHeight()) + 1;
-                    Factura factura = controladorFactura.read(numFactura);
-                    
-                    DetallesFactura detallesFactura = new DetallesFactura(factura);
-                    detallesFactura.setVisible(true);
+                    try {
+                        Factura factura = controladorFactura.read(numFactura);
+                        DetallesFactura detallesFactura = new DetallesFactura(factura);
+                        detallesFactura.setVisible(true);
+                    } catch (PSQLException ex) {
+                        Logger.getLogger(VistaAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         } catch (java.lang.IndexOutOfBoundsException ex) {
@@ -455,12 +466,33 @@ public class VistaAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tabFacturaMouseClicked
 
+    private void bNuevoCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoCliActionPerformed
+        // TODO add your handling code here:
+        int fila = tabCliente.getSelectedRow();
+        try {
+            Cliente cliente = controladorCliente.findByCedula((String) tabCliente.getValueAt(fila, 0));
+            
+        } catch (PSQLException ex) {
+            Logger.getLogger(VistaAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bNuevoCliActionPerformed
+
+    private void bEliminarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarProActionPerformed
+        // TODO add your handling code here:
+        int fila = tabProducto.getSelectedRow();
+        try {
+            controladorProducto.delete((int) tabProducto.getValueAt(fila, 0));
+            tabProducto.repaint();
+        } catch (PSQLException ex) {
+            Logger.getLogger(VistaAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_bEliminarProActionPerformed
+
     /**
      * @param args the command line arguments
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bAnular;
     private javax.swing.JButton bBuscarCli;
     private javax.swing.JButton bBuscarFac;
     private javax.swing.JButton bBuscarPro;
@@ -490,7 +522,7 @@ public class VistaAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField tCodProducto;
     private javax.swing.JTextField tNumFactura;
     private javax.swing.JTable tabCliente;
-    private javax.swing.JTable tabFactura;
+    public static javax.swing.JTable tabFactura;
     private javax.swing.JTable tabProducto;
     // End of variables declaration//GEN-END:variables
 

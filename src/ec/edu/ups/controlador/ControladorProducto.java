@@ -60,12 +60,13 @@ public class ControladorProducto {
             sta.execute(sql);
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             ServerErrorMessage serverError = new ServerErrorMessage("");
             throw new PSQLException(serverError);
         }
     }
 
-    public void delete(int codigo) {
+    public void delete(int codigo) throws PSQLException{
         String sql = "DELETE FROM \"PRODUCTO\" WHERE \"PRO_CODIGO\" = " + codigo + ";";
         miBaseDatos.conectar();
         try {
@@ -74,6 +75,8 @@ public class ControladorProducto {
             miBaseDatos.desconectar();
         } catch (SQLException ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
     }
     
@@ -93,7 +96,7 @@ public class ControladorProducto {
         }
     }
     
-    public Producto read(int codigo) {
+    public Producto read(int codigo) throws PSQLException{
         Producto producto = new Producto();
         try {
             String sql = "SELECT * FROM \"PRODUCTO\" WHERE \"PRO_CODIGO\" = " + codigo + ";";
@@ -111,6 +114,8 @@ public class ControladorProducto {
             miBaseDatos.desconectar();
         } catch (Exception ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
         return producto;
     }
