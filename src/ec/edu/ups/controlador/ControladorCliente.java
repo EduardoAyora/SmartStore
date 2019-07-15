@@ -142,7 +142,7 @@ public class ControladorCliente{
         List<Cliente> personas = new ArrayList<>();
         
         try {
-            String sql = "SELECT * FROM \"PERSONA\"";
+            String sql = "SELECT * FROM \"CLIENTE\"";
             System.out.println(sql);
             miBaseDatos.conectar();
             Statement sta = miBaseDatos.getConexionBD().createStatement();

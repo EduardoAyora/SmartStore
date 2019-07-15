@@ -11,6 +11,7 @@ import ec.edu.ups.controlador.ControladorProducto;
 import ec.edu.ups.modelo.ClaveAdmin;
 import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Factura;
+import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Render;
 import ec.edu.ups.vista.persona.VistaActualizarPersona;
 import ec.edu.ups.vista.persona.VistaCrearPersona;
@@ -52,13 +53,18 @@ public class VistaAdmin extends javax.swing.JFrame {
         claveAdmin = new ClaveAdmin();
         this.setExtendedState(MAXIMIZED_BOTH);
         tabFactura.setRowHeight(40);
-        llenarDatos();
+        tabProducto.setRowHeight(40);
+        tabCliente.setRowHeight(40);
+        llenarDatosFactura();
+        llenarDatosProducto();
+        llenarDatosCliente();
     }
 
-    public void llenarDatos() {
+    public void llenarDatosFactura() {
         tabFactura.setDefaultRenderer(Object.class, new Render());
         JButton btnVer = new JButton("Ver");
         DefaultTableModel modelo = (DefaultTableModel) tabFactura.getModel();
+        vaciarTablaFactura(modelo);
         List<Factura> lista = controladorFactura.listar();
         for (Factura factura : lista) {
             Object[] datos = {factura.getNumeroFactura(),
@@ -71,6 +77,36 @@ public class VistaAdmin extends javax.swing.JFrame {
             modelo.addRow(datos);
         }
 
+    }
+    
+    public void llenarDatosProducto(){
+        DefaultTableModel modelo = (DefaultTableModel) tabProducto.getModel();
+        vaciarTablaProducto(modelo);
+        List<Producto> lista = controladorProducto.listar();
+        for (Producto producto : lista) {
+            Object[] datos = {producto.getCodigoProducto(),
+                producto.getNombre(),
+                producto.getPrecio(),
+                producto.getDescripcion()
+            };
+            modelo.addRow(datos);
+        }
+    }
+    
+    public void llenarDatosCliente(){
+        DefaultTableModel modelo = (DefaultTableModel) tabCliente.getModel();
+        vaciarTablaCliente(modelo);
+        List<Cliente> lista = controladorCliente.listar();
+        for (Cliente cliente : lista) {
+            Object[] datos = {cliente.getCedula(),
+                cliente.getNombre() + " " + cliente.getApellido(),
+                cliente.getCelular(),
+                cliente.getCorreo(),
+                cliente.getDireccion(),
+                cliente.getCodigoTarjeta()
+            };
+            modelo.addRow(datos);
+        }
     }
 
     /**
@@ -190,7 +226,7 @@ public class VistaAdmin extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Código", "Nombre", "Cantidad", "Precio"
+                "Código", "Nombre", "Precio", "Descripción"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -218,6 +254,11 @@ public class VistaAdmin extends javax.swing.JFrame {
         });
 
         bEditarPro.setText("Editar");
+        bEditarPro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEditarProActionPerformed(evt);
+            }
+        });
 
         bEliminarPro.setText("Eliminar");
         bEliminarPro.addActionListener(new java.awt.event.ActionListener() {
@@ -290,17 +331,22 @@ public class VistaAdmin extends javax.swing.JFrame {
         bEditarCli.setText("Editar");
 
         bEliminarCli.setText("Eliminar");
+        bEliminarCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bEliminarCliActionPerformed(evt);
+            }
+        });
 
         tabCliente.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Cedula", "Nombre", "Cantidad", "Precio"
+                "Cedula", "Nombre", "Celular", "Correo", "Direccion", "Tarjeta"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -427,6 +473,7 @@ public class VistaAdmin extends javax.swing.JFrame {
 
     private void bNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoProActionPerformed
         // TODO add your handling code here:
+        llenarDatosProducto();
     }//GEN-LAST:event_bNuevoProActionPerformed
 
     private void bBuscarFacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarFacActionPerformed
@@ -482,12 +529,50 @@ public class VistaAdmin extends javax.swing.JFrame {
         int fila = tabProducto.getSelectedRow();
         try {
             controladorProducto.delete((int) tabProducto.getValueAt(fila, 0));
-            tabProducto.repaint();
         } catch (PSQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger(VistaAdmin.class.getName()).log(Level.SEVERE, null, ex);
         }
+        llenarDatosProducto();
     }//GEN-LAST:event_bEliminarProActionPerformed
 
+    private void bEditarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditarProActionPerformed
+        // TODO add your handling code here:
+        llenarDatosProducto();
+    }//GEN-LAST:event_bEditarProActionPerformed
+
+    private void bEliminarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarCliActionPerformed
+        // TODO add your handling code here:
+        int fila = tabCliente.getSelectedRow();
+        try {
+            controladorCliente.delete((String) tabCliente.getValueAt(fila, 0));
+        } catch (PSQLException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(VistaAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        llenarDatosCliente();
+    }//GEN-LAST:event_bEliminarCliActionPerformed
+
+    public void vaciarTablaProducto(DefaultTableModel modelo){
+        int filas=tabProducto.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            modelo.removeRow(0);
+        }
+    }
+    
+    public void vaciarTablaFactura(DefaultTableModel modelo){
+        int filas=tabFactura.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            modelo.removeRow(0);
+        }
+    }
+    
+    public void vaciarTablaCliente(DefaultTableModel modelo){
+        int filas=tabCliente.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            modelo.removeRow(0);
+        }
+    }
     /**
      * @param args the command line arguments
      */
