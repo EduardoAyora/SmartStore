@@ -28,7 +28,7 @@ public class BaseDatos {
     public void conectar() {
         String url = "jdbc:postgresql://localhost:5432/SmartStore";
         String user = "postgres";
-        String password = "chibi2998";
+        String password = "Aga381joker";
         try {
             conexionBD = DriverManager.getConnection(url, user, password);
             if (conexionBD.isValid(5000)) {
