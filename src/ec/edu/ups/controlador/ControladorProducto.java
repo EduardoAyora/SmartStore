@@ -53,7 +53,7 @@ public class ControladorProducto {
     }
 
     public void create(Producto producto) throws PSQLException{
-        String sql = "INSERT INTO \"PRODUCTO\" VALUES(" + producto.getCodigoProducto() + ", '"
+        String sql = "INSERT INTO \"PRODUCTO\" VALUES(" + codigo + ", '"
                 + producto.getNombre()+ "', "
                 + producto.getPrecio() + ", '"
                 + producto.getDescripcion() + "');";
@@ -69,7 +69,7 @@ public class ControladorProducto {
             throw new PSQLException(serverError);
         }
     }
-
+    
     public void delete(int codigo) throws PSQLException{
         String sql = "DELETE FROM \"PRODUCTO\" WHERE \"PRO_CODIGO\" = " + codigo + ";";
         miBaseDatos.conectar();

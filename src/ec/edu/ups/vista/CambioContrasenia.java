@@ -6,7 +6,6 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.ClaveAdmin;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 /**
