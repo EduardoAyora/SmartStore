@@ -11,7 +11,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.postgresql.util.PSQLException;
 
 /**
  *
@@ -173,6 +176,8 @@ public class VistaActualizarPersona extends javax.swing.JInternalFrame {
             txtCelular.setText(persona.getCelular());
         }catch(java.lang.NullPointerException ex){
             JOptionPane.showMessageDialog(this, "La persona no existe", "Error", JOptionPane.WARNING_MESSAGE);
+        } catch (PSQLException ex) {
+            Logger.getLogger(VistaActualizarPersona.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
