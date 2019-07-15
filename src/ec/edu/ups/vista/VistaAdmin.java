@@ -59,6 +59,11 @@ public class VistaAdmin extends javax.swing.JFrame {
         llenarDatosProducto();
         llenarDatosCliente();
     }
+    
+    public void agregarGrupo(){
+        grupoProducto.add(rbtnActualizar);
+        grupoProducto.add(rbtnNuevo);
+    }
 
     public void llenarDatosFactura() {
         tabFactura.setDefaultRenderer(Object.class, new Render());
@@ -118,6 +123,7 @@ public class VistaAdmin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        grupoProducto = new javax.swing.ButtonGroup();
         pestaFactura = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -132,9 +138,19 @@ public class VistaAdmin extends javax.swing.JFrame {
         tCodProducto = new javax.swing.JTextField();
         bBuscarPro = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        bNuevoPro = new javax.swing.JButton();
-        bEditarPro = new javax.swing.JButton();
         bEliminarPro = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtCodigo = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
+        txtDescripcion = new javax.swing.JTextField();
+        btnAceptarProducto = new javax.swing.JButton();
+        rbtnNuevo = new javax.swing.JRadioButton();
+        rbtnActualizar = new javax.swing.JRadioButton();
         jPanel4 = new javax.swing.JPanel();
         lCedCliente = new javax.swing.JLabel();
         tCedCliente = new javax.swing.JTextField();
@@ -204,7 +220,7 @@ public class VistaAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bBuscarFac)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -246,26 +262,96 @@ public class VistaAdmin extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jSeparator1.setToolTipText("");
 
-        bNuevoPro.setText("Nuevo");
-        bNuevoPro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bNuevoProActionPerformed(evt);
-            }
-        });
-
-        bEditarPro.setText("Editar");
-        bEditarPro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bEditarProActionPerformed(evt);
-            }
-        });
-
         bEliminarPro.setText("Eliminar");
         bEliminarPro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bEliminarProActionPerformed(evt);
             }
         });
+
+        jLabel1.setText("Código:");
+
+        jLabel2.setText("Nombre:");
+
+        jLabel3.setText("Precio:");
+
+        jLabel4.setText("Descripción:");
+
+        txtCodigo.setEditable(false);
+
+        btnAceptarProducto.setText("Aceptar");
+        btnAceptarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarProductoActionPerformed(evt);
+            }
+        });
+
+        rbtnNuevo.setText("Nuevo");
+        rbtnNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnNuevoActionPerformed(evt);
+            }
+        });
+
+        rbtnActualizar.setText("Actualizar");
+        rbtnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnActualizarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(txtNombre)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 28, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnAceptarProducto)
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbtnActualizar)
+                            .addComponent(rbtnNuevo))
+                        .addContainerGap())))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtnNuevo))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtnActualizar))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAceptarProducto))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -280,14 +366,12 @@ public class VistaAdmin extends javax.swing.JFrame {
                         .addComponent(tCodProducto)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(bBuscarPro))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(23, 23, 23)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(bEditarPro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bNuevoPro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(bEliminarPro, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addComponent(bEliminarPro, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -301,18 +385,16 @@ public class VistaAdmin extends javax.swing.JFrame {
                                 .addComponent(tCodProducto)
                                 .addComponent(bBuscarPro))
                             .addComponent(lCodProducto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(13, 13, 13)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(bNuevoPro)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(bEditarPro)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(117, 117, 117)
                 .addComponent(bEliminarPro)
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(243, Short.MAX_VALUE))
         );
 
         pestaFactura.addTab("Producto", jPanel2);
@@ -364,7 +446,7 @@ public class VistaAdmin extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -384,7 +466,7 @@ public class VistaAdmin extends javax.swing.JFrame {
                     .addContainerGap()
                     .addComponent(lCedCliente)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(tCedCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                    .addComponent(tCedCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(bBuscarCli)
                     .addGap(143, 143, 143)))
@@ -471,11 +553,6 @@ public class VistaAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void bNuevoProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoProActionPerformed
-        // TODO add your handling code here:
-        llenarDatosProducto();
-    }//GEN-LAST:event_bNuevoProActionPerformed
-
     private void bBuscarFacActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarFacActionPerformed
         // TODO add your handling code here:
         try {
@@ -536,11 +613,6 @@ public class VistaAdmin extends javax.swing.JFrame {
         llenarDatosProducto();
     }//GEN-LAST:event_bEliminarProActionPerformed
 
-    private void bEditarProActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEditarProActionPerformed
-        // TODO add your handling code here:
-        llenarDatosProducto();
-    }//GEN-LAST:event_bEditarProActionPerformed
-
     private void bEliminarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarCliActionPerformed
         // TODO add your handling code here:
         int fila = tabCliente.getSelectedRow();
@@ -552,6 +624,27 @@ public class VistaAdmin extends javax.swing.JFrame {
         }
         llenarDatosCliente();
     }//GEN-LAST:event_bEliminarCliActionPerformed
+
+    private void rbtnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnNuevoActionPerformed
+        // TODO add your handling code here:
+        txtCodigo.setText(Integer.toString(controladorProducto.getCodigo()));
+        rbtnActualizar.setSelected(false);
+    }//GEN-LAST:event_rbtnNuevoActionPerformed
+
+    private void rbtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnActualizarActionPerformed
+        // TODO add your handling code here:
+        rbtnNuevo.setSelected(false);
+    }//GEN-LAST:event_rbtnActualizarActionPerformed
+
+    private void btnAceptarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarProductoActionPerformed
+        // TODO add your handling code here:
+        if(rbtnNuevo.isSelected()){
+            Producto producto;
+            llenarDatosProducto();
+        }else{
+            llenarDatosProducto();
+        }
+    }//GEN-LAST:event_btnAceptarProductoActionPerformed
 
     public void vaciarTablaProducto(DefaultTableModel modelo){
         int filas=tabProducto.getRowCount();
@@ -582,17 +675,22 @@ public class VistaAdmin extends javax.swing.JFrame {
     private javax.swing.JButton bBuscarFac;
     private javax.swing.JButton bBuscarPro;
     private javax.swing.JButton bEditarCli;
-    private javax.swing.JButton bEditarPro;
     private javax.swing.JButton bEliminarCli;
     private javax.swing.JButton bEliminarPro;
     private javax.swing.JButton bNuevoCli;
-    private javax.swing.JButton bNuevoPro;
+    private javax.swing.JButton btnAceptarProducto;
+    private javax.swing.ButtonGroup grupoProducto;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -603,12 +701,18 @@ public class VistaAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel lCodProducto;
     private javax.swing.JLabel lNumFactura;
     private javax.swing.JTabbedPane pestaFactura;
+    private javax.swing.JRadioButton rbtnActualizar;
+    private javax.swing.JRadioButton rbtnNuevo;
     private javax.swing.JTextField tCedCliente;
     private javax.swing.JTextField tCodProducto;
     private javax.swing.JTextField tNumFactura;
     private javax.swing.JTable tabCliente;
     public static javax.swing.JTable tabFactura;
     private javax.swing.JTable tabProducto;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 
 }

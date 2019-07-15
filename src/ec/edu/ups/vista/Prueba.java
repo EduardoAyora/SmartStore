@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.postgresql.util.PSQLException;
@@ -106,8 +108,12 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
     }
 
     public void llegoTarjetaArduino(String usuario) {
-        cliente = controladorCliente.findByCedula(usuario);
-        System.out.println(cliente);
+        try {
+            cliente = controladorCliente.findByCedula(usuario);
+            System.out.println(cliente);
+        } catch (PSQLException ex) {
+            Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void estanteSeleccionado(int estante) {

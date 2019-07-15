@@ -30,6 +30,10 @@ public class ControladorProducto {
         obtenerCodigo();
     }
 
+    public int getCodigo() {
+        return codigo;
+    }
+    
     public void obtenerCodigo(){
         String sql = "SELECT MAX(\"PRO_CODIGO\") FROM \"PRODUCTO\";";
         miBaseDatos.conectar();
