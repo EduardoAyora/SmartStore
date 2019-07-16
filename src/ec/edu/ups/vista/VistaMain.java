@@ -147,6 +147,7 @@ public class VistaMain extends javax.swing.JFrame {
     }//GEN-LAST:event_itmSalirActionPerformed
 
     private void bClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bClienteActionPerformed
+
         if (vistaCliente == null || vistaCliente.isVisible() == false) {
             vistaCliente = new VistaCliente();
             vistaCliente.toFront();

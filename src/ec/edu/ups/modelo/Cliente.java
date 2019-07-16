@@ -22,8 +22,10 @@ public class Cliente {
     private String correo;
     private String direccion;
     private String codigoTarjeta;
+    private int saldo;
 
     public Cliente() {
+        saldo = 0;
     }
 
     public Cliente(String cedula, String nombre, String apellido, String celular, String correo, String direccion, String codigoTarjeta) {
@@ -36,6 +38,18 @@ public class Cliente {
         this.codigoTarjeta = codigoTarjeta;
     }
 
+    public void agregarSaldo(int saldoAgregado){
+        saldo += saldoAgregado;
+    }
+    
+    public int getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(int saldo) {
+        this.saldo = saldo;
+    }
+    
     public String getCodigoTarjeta() {
         return codigoTarjeta;
     }

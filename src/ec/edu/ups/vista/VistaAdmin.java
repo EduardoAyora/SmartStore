@@ -13,9 +13,15 @@ import ec.edu.ups.modelo.Cliente;
 import ec.edu.ups.modelo.Factura;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Render;
+import gnu.io.NRSerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 import java.awt.Dimension;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,19 +35,22 @@ import org.postgresql.util.PSQLException;
  *
  * @author Eduardo Ayora
  */
-public class VistaAdmin extends javax.swing.JFrame {
+public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventListener {
 
     private CambioContrasenia cambioContrasenia;
     private ClaveAdmin claveAdmin;
     private ControladorFactura controladorFactura;
     private ControladorCliente controladorCliente;
     private ControladorProducto controladorProducto;
+    private NRSerialPort puertoUSB;
+    private double saldo;
 
     /**
      * Creates new form VistaPrincipal
      */
     public VistaAdmin() {
         initComponents();
+        conectar();
         controladorFactura = new ControladorFactura();
         controladorCliente = new ControladorCliente();
         controladorProducto = new ControladorProducto();
@@ -50,10 +59,29 @@ public class VistaAdmin extends javax.swing.JFrame {
         tabFactura.setRowHeight(40);
         tabProducto.setRowHeight(40);
         tabCliente.setRowHeight(40);
+        saldo = 0;
         iniciarRadioBotones();
         llenarDatosFactura();
         llenarDatosProducto();
         llenarDatosCliente();
+        iniciarRadioBoton();
+    }
+
+    public void iniciarRadioBoton() {
+        rbtnNuevoCli.setSelected(true);
+        tCed.setEditable(true);
+    }
+
+    public void conectar() {
+        try {
+            puertoUSB = new NRSerialPort("COM6", 9600);
+            puertoUSB.connect();
+            //Agregar para recibir
+            puertoUSB.notifyOnDataAvailable(true);
+            puertoUSB.addEventListener(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void iniciarRadioBotones() {
@@ -172,6 +200,9 @@ public class VistaAdmin extends javax.swing.JFrame {
         rbtnNuevoCli = new javax.swing.JRadioButton();
         rbtnActualizarCli = new javax.swing.JRadioButton();
         bAceptarCli = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtSaldo = new javax.swing.JTextField();
+        btnAgregarSaldo = new javax.swing.JButton();
         pEst = new javax.swing.JPanel();
         lCodEstante = new javax.swing.JLabel();
         tCodEstante = new javax.swing.JTextField();
@@ -515,6 +546,8 @@ public class VistaAdmin extends javax.swing.JFrame {
             }
         });
 
+        tTarCli.setEditable(false);
+
         rbtnNuevoCli.setText("Nuevo");
         rbtnNuevoCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -536,38 +569,53 @@ public class VistaAdmin extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("Saldo:");
+
+        txtSaldo.setEditable(false);
+
+        btnAgregarSaldo.setText("Agregar Saldo");
+        btnAgregarSaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarSaldoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
+                        .addGap(36, 36, 36)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lApellido)
                             .addComponent(lCelular)
                             .addComponent(lNombre)
-                            .addComponent(lCed))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tCed, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tNomCli, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                            .addComponent(tApellidoCli)
-                            .addComponent(tCelCli, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lCed)))
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lDireccion)
                             .addComponent(lCorreo)
-                            .addComponent(lTarjeta))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tCoCli)
-                            .addComponent(tDirCli)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addComponent(lTarjeta)
+                            .addComponent(jLabel1))))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tCoCli, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                        .addComponent(tDirCli)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(tTarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(tCed, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tNomCli)
+                        .addComponent(tApellidoCli, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tCelCli, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAgregarSaldo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(rbtnActualizarCli)
@@ -613,7 +661,13 @@ public class VistaAdmin extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lTarjeta)
-                            .addComponent(tTarCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(tTarCli, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnAgregarSaldo)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -942,8 +996,10 @@ public class VistaAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-
-
+        if (puertoUSB != null && puertoUSB.isConnected()) {
+            puertoUSB.disconnect();
+            puertoUSB = null;
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -1060,14 +1116,46 @@ public class VistaAdmin extends javax.swing.JFrame {
     private void bAceptarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAceptarCliActionPerformed
         // TODO add your handling code here:
 
+        try {
+            if (rbtnNuevoCli.isSelected()) {
+                Cliente cliente = new Cliente();
+                cliente.setCodigoTarjeta(tTarCli.getText());
+                cliente.setCedula(tCed.getText());
+                cliente.setNombre(tNomCli.getText());
+                cliente.setApellido(tApellidoCli.getText());
+                cliente.setCelular(tCelCli.getText());
+                cliente.setCorreo(tCoCli.getText());
+                cliente.setDireccion(tDirCli.getText());
+                controladorCliente.create(cliente);
+                llenarDatosCliente();
+            }else{
+                Cliente cliente = new Cliente();
+                cliente.setCodigoTarjeta(tTarCli.getText());
+                cliente.setCedula(tCed.getText());
+                cliente.setNombre(tNomCli.getText());
+                cliente.setApellido(tApellidoCli.getText());
+                cliente.setCelular(tCelCli.getText());
+                cliente.setCorreo(tCoCli.getText());
+                cliente.setDireccion(tDirCli.getText());
+                controladorCliente.create(cliente);
+                llenarDatosCliente();
+            }
+
+        } catch (PSQLException ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_bAceptarCliActionPerformed
 
     private void rbtnActualizarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnActualizarCliActionPerformed
         // TODO add your handling code here:
+        rbtnNuevoCli.setSelected(false);
+        tCed.setEditable(false);
     }//GEN-LAST:event_rbtnActualizarCliActionPerformed
 
     private void rbtnNuevoCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnNuevoCliActionPerformed
         // TODO add your handling code here:
+        rbtnActualizarCli.setSelected(false);
+        tCed.setEditable(true);
     }//GEN-LAST:event_rbtnNuevoCliActionPerformed
 
     private void bEliminarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarCliActionPerformed
@@ -1174,6 +1262,17 @@ public class VistaAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSeleccionarProducto1ActionPerformed
 
+    private void btnAgregarSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarSaldoActionPerformed
+        // TODO add your handling code here:
+        try{
+            double saldoExtra = Double.parseDouble(JOptionPane.showInputDialog(null," Ingrese saldo: "));
+            saldo += saldoExtra;
+            txtSaldo.setText(Double.toString(saldo));
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnAgregarSaldoActionPerformed
+
     public void vaciarTablaProducto(DefaultTableModel modelo) {
         int filas = tabProducto.getRowCount();
         for (int i = 0; i < filas; i++) {
@@ -1201,6 +1300,33 @@ public class VistaAdmin extends javax.swing.JFrame {
         tPrePro.setText("");
         tDesPro.setText("");
     }
+
+    @Override
+    public void serialEvent(SerialPortEvent evento) {
+        try {
+
+            if (evento.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+                DataInputStream lectura = new DataInputStream(puertoUSB.getInputStream());
+                if (lectura.available() > 0) {
+                    try {
+                        System.out.println("Orden dada");
+                        BufferedReader input = new BufferedReader(new InputStreamReader(puertoUSB.getInputStream()));
+                        String entrada = input.readLine();
+                        System.out.println(entrada);
+                        System.out.println("Tamaño: " + entrada.length());
+                        if (entrada.length() > 1) {
+                            tTarCli.setText(entrada);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -1219,8 +1345,10 @@ public class VistaAdmin extends javax.swing.JFrame {
     private javax.swing.JButton bEliminarPro;
     private javax.swing.JButton btnAceptarEst;
     private javax.swing.JButton btnAceptarProducto;
+    private javax.swing.JButton btnAgregarSaldo;
     private javax.swing.JButton btnSeleccionarProducto;
     private javax.swing.JButton btnSeleccionarProducto1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -1293,6 +1421,7 @@ public class VistaAdmin extends javax.swing.JFrame {
     public static javax.swing.JTable tabFactura;
     private javax.swing.JTable tabPin;
     private javax.swing.JTable tabProducto;
+    private javax.swing.JTextField txtSaldo;
     // End of variables declaration//GEN-END:variables
 
 }
