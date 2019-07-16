@@ -509,6 +509,13 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             estantes.get(1).setCliente(cliente);
             estantes.get(2).setCliente(cliente);
             estantes.get(3).setCliente(cliente);
+            cajasDatosCliente();
+            vaciarTablaFactura();
+            for (Factura factura : facturas) {
+                if (factura.getCliente().equals(cliente)) {
+                    rellenarTabla(factura);
+                }
+            }
         } catch (PSQLException ex) {
             Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -529,6 +536,13 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             estantes.get(1).setCliente(cliente);
             estantes.get(2).setCliente(cliente);
             estantes.get(3).setCliente(cliente);
+            cajasDatosCliente();
+            vaciarTablaFactura();
+            for (Factura factura : facturas) {
+                if (factura.getCliente().equals(cliente)) {
+                    rellenarTabla(factura);
+                }
+            }
         } catch (PSQLException ex) {
             Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -536,25 +550,25 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
 
     private void btnP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP1ActionPerformed
         // TODO add your handling code here:
-        int datoArduino = 1;
+        int datoArduino = 0;
         llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP1ActionPerformed
 
     private void btnP22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP22ActionPerformed
         // TODO add your handling code here:
-        int datoArduino = 4;
+        int datoArduino = 5;
         llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP22ActionPerformed
 
     private void btnP11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP11ActionPerformed
         // TODO add your handling code here:
-        int datoArduino = 2;
+        int datoArduino = 10;
         llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP11ActionPerformed
 
     private void btnP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP2ActionPerformed
         // TODO add your handling code here:
-        int datoArduino = 3;
+        int datoArduino = 15;
         llegoPinArduino(datoArduino);
     }//GEN-LAST:event_btnP2ActionPerformed
 
@@ -655,6 +669,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                     detalle.setSubtotal(producto.getPrecio());
                     detalle.setProducto(producto);
                     factura.getDetalles().add(detalle);
+                    rellenarTabla(factura);
                 }
                 clienteEncontrado = true;
                 factura.setTiempoEspera(System.currentTimeMillis());
@@ -671,6 +686,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             factura.setCliente(clienteEstante);
             factura.getDetalles().add(detalle);
             facturas.add(factura);
+            rellenarTabla(factura);
         }
 
     }
@@ -679,7 +695,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         for (int i = 0; i < facturas.size(); i++) {
             Factura factura = facturas.get(i);
             System.out.println(System.currentTimeMillis() - factura.getTiempoEspera());
-            if (System.currentTimeMillis() - factura.getTiempoEspera() > 17000) {
+            if (System.currentTimeMillis() - factura.getTiempoEspera() > 25000) {
                 factura.setNumeroFactura(controladorFactura.getCodigo());
                 double subtotal = 0;
                 for (Detalle detalle : factura.getDetalles()) {
@@ -749,6 +765,12 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                                 estantes.get(2).setCliente(cliente);
                                 estantes.get(3).setCliente(cliente);
                                 cajasDatosCliente();
+                                vaciarTablaFactura();
+                                for (Factura factura : facturas) {
+                                    if (factura.getCliente().equals(cliente)) {
+                                        rellenarTabla(factura);
+                                    }
+                                }
                             }
                         } catch (PSQLException ex) {
                             JOptionPane.showMessageDialog(null, "No esta registrado");
@@ -783,10 +805,10 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         txtTelefono.setText(cliente.getCelular());
         txtDireccion.setText(cliente.getDireccion());
     }
-    
-    public void rellenarTabla(Factura factura){
+
+    public void rellenarTabla(Factura factura) {
         DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
-        vaciarTablaFactura(modelo);
+        vaciarTablaFactura();
         List<Detalle> lista = factura.getDetalles();
         for (Detalle detalle : lista) {
             Object[] datos = {detalle.getProducto().getCodigoProducto(),
@@ -798,15 +820,14 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             modelo.addRow(datos);
         }
     }
-    
-    public void vaciarTablaFactura(DefaultTableModel modelo) {
+
+    public void vaciarTablaFactura() {
+        DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
         int filas = tblDetalles.getRowCount();
         for (int i = 0; i < filas; i++) {
             modelo.removeRow(0);
         }
     }
-    
-    
 
     /**
      * @param args the command line arguments
