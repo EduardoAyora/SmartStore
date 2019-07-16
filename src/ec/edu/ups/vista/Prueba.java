@@ -518,7 +518,13 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                             cliente = controladorCliente.findByTarjeta(entrada);
                             System.out.println(cliente);
                             estantes.get(0).setAbierto(true);
+                            estantes.get(1).setAbierto(true);
+                            estantes.get(2).setAbierto(true);
+                            estantes.get(3).setAbierto(true);
                             estantes.get(0).setCliente(cliente);
+                            estantes.get(1).setCliente(cliente);
+                            estantes.get(2).setCliente(cliente);
+                            estantes.get(3).setCliente(cliente);
                         }catch(PSQLException ex){
                             JOptionPane.showMessageDialog(null, "No esta registrado");
                             ex.printStackTrace();
@@ -532,6 +538,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                 if (lecturaSensor.available() > 0) {
                     int valor = lecturaSensor.read();
                     valor -= 20;
+                    valor = valor / 2;
                     System.out.println(valor);
                     llegoPinArduino(valor);
                 }
