@@ -26,7 +26,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -170,6 +172,11 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         lblTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         btnEdu.setText("Edu");
         btnEdu.addActionListener(new java.awt.event.ActionListener() {
@@ -629,8 +636,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
 
     private void btnCerrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar1ActionPerformed
         // TODO add your handling code here:
-        int codigoArduino = 1;
-        cerrarEstante(codigoArduino);
+        enviarDato(101);
     }//GEN-LAST:event_btnCerrar1ActionPerformed
 
     private void btnCerrar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar2ActionPerformed
@@ -646,6 +652,14 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
     private void txtSubtotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSubtotalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSubtotalActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        if (puertoUSB != null && puertoUSB.isConnected()) {
+            puertoUSB.disconnect();
+            puertoUSB = null;
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     public void facturacion(Cliente clienteEstante, Producto producto) {
         boolean clienteEncontrado = false;
@@ -729,7 +743,7 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
             //Agregar para recibir
             puertoUSB.notifyOnDataAvailable(true);
             puertoUSB.addEventListener(this);
-
+            
             puertoSensor = new NRSerialPort("COM8", 9600);
             puertoSensor.connect();
             //Agregar para recibir
@@ -755,6 +769,9 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                         try {
                             if (entrada.length() > 1) {
                                 cliente = controladorCliente.findByTarjeta(entrada);
+                                if (cliente != null) {
+                                    enviarDato(100);
+                                }
                                 System.out.println(cliente);
                                 estantes.get(0).setAbierto(true);
                                 estantes.get(1).setAbierto(true);
@@ -780,14 +797,19 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
                         ex.printStackTrace();
                     }
                 }
-
+                
                 DataInputStream lecturaSensor = new DataInputStream(puertoSensor.getInputStream());
                 if (lecturaSensor.available() > 0) {
                     int valor = lecturaSensor.read();
-                    valor -= 20;
-                    valor = valor / 2;
-                    System.out.println(valor);
-                    llegoPinArduino(valor);
+                    if (valor == 101) {
+                        enviarDato(valor);
+                    } else {
+                        valor -= 20;
+                        valor = valor / 2;
+                        System.out.println(valor);
+                        llegoPinArduino(valor);
+                    }
+
                 }
             }
         } catch (Exception ex) {
@@ -826,6 +848,19 @@ public class Prueba extends javax.swing.JFrame implements SerialPortEventListene
         int filas = tblDetalles.getRowCount();
         for (int i = 0; i < filas; i++) {
             modelo.removeRow(0);
+        }
+    }
+
+    public void enviarDato(int valor) {
+        try {
+            OutputStream escritura = puertoUSB.getOutputStream();//obteniendo objeto para enviar datos
+            escritura.write(valor);
+            escritura.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "No se ha conectado");
+            ex.printStackTrace();
         }
     }
 
