@@ -6,10 +6,12 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.controlador.ControladorCliente;
+import ec.edu.ups.controlador.ControladorEstante;
 import ec.edu.ups.controlador.ControladorFactura;
 import ec.edu.ups.controlador.ControladorProducto;
 import ec.edu.ups.modelo.ClaveAdmin;
 import ec.edu.ups.modelo.Cliente;
+import ec.edu.ups.modelo.Estante;
 import ec.edu.ups.modelo.Factura;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Render;
@@ -42,6 +44,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
     private ControladorFactura controladorFactura;
     private ControladorCliente controladorCliente;
     private ControladorProducto controladorProducto;
+    private ControladorEstante controladorEstante;
     private NRSerialPort puertoUSB;
     private double saldo;
 
@@ -54,6 +57,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         controladorFactura = new ControladorFactura();
         controladorCliente = new ControladorCliente();
         controladorProducto = new ControladorProducto();
+        controladorEstante = new ControladorEstante();
         claveAdmin = new ClaveAdmin();
         this.setExtendedState(MAXIMIZED_BOTH);
         tabFactura.setRowHeight(40);
@@ -108,6 +112,20 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
     }
 
+    public void llenarDatosEstante(){
+        DefaultTableModel modelo = (DefaultTableModel) tabEstante.getModel();
+        vaciarTablaProducto(modelo);
+        List<Estante> lista = controladorEstante.listar();
+        for (Estante estante : lista) {
+            Object[] datos = {estante.getCodigo(),
+                est,
+                producto.getPrecio(),
+                producto.getDescripcion()
+            };
+            modelo.addRow(datos);
+        }
+    }
+    
     public void llenarDatosProducto() {
         DefaultTableModel modelo = (DefaultTableModel) tabProducto.getModel();
         vaciarTablaProducto(modelo);
@@ -494,6 +512,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         lCedCliente.setText("Cédula de Cliente:");
 
         bBuscarCli.setText("Buscar");
+        bBuscarCli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarCliActionPerformed(evt);
+            }
+        });
 
         bEliminarCli.setText("Eliminar");
         bEliminarCli.addActionListener(new java.awt.event.ActionListener() {
@@ -744,11 +767,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
             },
             new String [] {
-                "Código", "Producto"
+                "Código", "Producto", "Cantidad"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1320,6 +1343,29 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnSeleccionarActionPerformed
+
+    private void bBuscarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarCliActionPerformed
+        // TODO add your handling code here:
+        try {
+            rbtnActualizarCli.setSelected(true);
+            rbtnNuevoCli.setSelected(false);
+            tCed.setEditable(false);
+            Cliente cliente = controladorCliente.findByCedula(tCedCliente.getText());
+            tCed.setText(cliente.getCedula());
+            tNomCli.setText(cliente.getNombre());
+            tApellidoCli.setText(cliente.getApellido());
+            tCelCli.setText(cliente.getCelular());
+            tCoCli.setText(cliente.getCorreo());
+            tDirCli.setText(cliente.getDireccion());
+            tTarCli.setText(cliente.getCodigoTarjeta());
+            txtSaldo.setText(Double.toString(cliente.getSaldo()));
+            saldo = cliente.getSaldo();
+            rbtnNuevo.setSelected(false);
+        } catch (PSQLException ex) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado una fila");
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_bBuscarCliActionPerformed
 
     public void vaciarTablaProducto(DefaultTableModel modelo) {
         int filas = tabProducto.getRowCount();
