@@ -63,11 +63,14 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         tabFactura.setRowHeight(40);
         tabProducto.setRowHeight(40);
         tabCliente.setRowHeight(40);
+        tabEstante.setRowHeight(40);
+        tabPin.setRowHeight(40);
         saldo = 0;
         iniciarRadioBotones();
         llenarDatosFactura();
         llenarDatosProducto();
         llenarDatosCliente();
+        llenarDatosEstante();
         iniciarRadioBoton();
     }
 
@@ -114,11 +117,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
     public void llenarDatosEstante(){
         DefaultTableModel modelo = (DefaultTableModel) tabEstante.getModel();
-        vaciarTablaProducto(modelo);
+        vaciarTablaEstante(modelo);
         List<Estante> lista = controladorEstante.listar();
         for (Estante estante : lista) {
             Object[] datos = {estante.getCodigo(),
-                estante.getProducto(),
+                estante.getProducto().getNombre(),
                 estante.getCantidad()
             };
             modelo.addRow(datos);
@@ -1366,6 +1369,13 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         }
     }//GEN-LAST:event_bBuscarCliActionPerformed
 
+    public void vaciarTablaEstante(DefaultTableModel modelo) {
+        int filas = tabEstante.getRowCount();
+        for (int i = 0; i < filas; i++) {
+            modelo.removeRow(0);
+        }
+    }
+    
     public void vaciarTablaProducto(DefaultTableModel modelo) {
         int filas = tabProducto.getRowCount();
         for (int i = 0; i < filas; i++) {
