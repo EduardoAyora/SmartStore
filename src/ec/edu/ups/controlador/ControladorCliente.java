@@ -37,8 +37,9 @@ public class ControladorCliente{
                 + persona.getCelular()+ "', '"
                 + persona.getCorreo() + "', '" 
                 + persona.getDireccion()+ "', '"
-                + persona.getCodigoTarjeta()+ "');";
-
+                + persona.getCodigoTarjeta()+ "',"
+                + persona.getSaldo() + ");";
+        
         miBaseDatos.conectar();
         try {
             Statement sta = miBaseDatos.getConexionBD().createStatement();
@@ -70,8 +71,9 @@ public class ControladorCliente{
                 + "\"CLI_APELLIDO\" = '" + persona.getApellido() + "',"
                 + "\"CLI_CELULAR\" = '" + persona.getCelular() + "',"
                 + "\"CLI_CORREO\" = '" + persona.getCorreo() + "',"
-                + "\"CLI_DIRECCION\" = '" + persona.getCorreo() + "', '"
-                + "\"CLI_TARJETA\" = '" + persona.getCodigoTarjeta()
+                + "\"CLI_DIRECCION\" = '" + persona.getCorreo() + "', "
+                + "\"CLI_TARJETA\" = '" + persona.getCodigoTarjeta() + "',"
+                + "\"CLI_SALDO\" = " + persona.getSaldo()
                 + " WHERE \"CLI_CEDULA\" = '" + persona.getCedula() + "';";
         miBaseDatos.conectar();
 
@@ -99,6 +101,7 @@ public class ControladorCliente{
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
                 persona.setCodigoTarjeta(rs.getString("CLI_TARJETA"));
+                persona.setSaldo(rs.getDouble("CLI_SALDO"));
             }
             rs.close();
             sta.close();
@@ -125,6 +128,7 @@ public class ControladorCliente{
                 persona.setCelular(rs.getString("CLI_CELULAR"));
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
+                persona.setSaldo(rs.getDouble("CLI_SALDO"));
                 persona.setCodigoTarjeta(tarjeta);
             }
             rs.close();
@@ -156,6 +160,7 @@ public class ControladorCliente{
                 persona.setCorreo(rs.getString("CLI_CORREO"));
                 persona.setDireccion(rs.getString("CLI_DIRECCION"));
                 persona.setCodigoTarjeta(rs.getString("CLI_TARJETA"));
+                persona.setSaldo(rs.getDouble("CLI_SALDO"));
                 personas.add(persona);
             }
             rs.close();

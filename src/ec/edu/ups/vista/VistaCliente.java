@@ -53,6 +53,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     private ControladorCliente controladorCliente;
     private ControladorFactura controladorFactura;
     private ControladorDetalle controladorDetalle;
+    private ControladorEstante controladorEstante;
     private List<Pin> pines;
     private List<Estante> estantes;
     private List<Factura> facturas;
@@ -70,14 +71,16 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         controladorCliente = new ControladorCliente();
         controladorFactura = new ControladorFactura();
         controladorDetalle = new ControladorDetalle();
+        controladorEstante = new ControladorEstante();
         pines = new ControladorPin().listar();
         estantes = new ControladorEstante().listar();
         txtNumeroFactura.setText(Integer.toString(controladorFactura.getCodigo()));
+        tblDetalles.setRowHeight(40);
         emparejarPinesEstantes();
         iniciarTimer();
-        conectar();
+        //conectar();
     }
-
+    
     public void emparejarPinesEstantes() {
         for (Pin pin : pines) {
             for (Estante estante : estantes) {
@@ -170,6 +173,8 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         lblIva = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
         lblTotal = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtSaldo = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -291,6 +296,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
 
         txtFecha.setEditable(false);
 
+        tblDetalles.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         tblDetalles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -328,6 +334,10 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         txtTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         lblTotal.setText("Total:");
+
+        jLabel1.setText("Saldo:");
+
+        txtSaldo.setEditable(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -369,13 +379,21 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                                         .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblTelefono)
-                                    .addComponent(lblDireccion))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblDireccion)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(lblTelefono)))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(134, 134, 134))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                                            .addComponent(txtDireccion))
+                                        .addGap(153, 153, 153))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 164, Short.MAX_VALUE))))
                             .addComponent(jScrollPane1))))
                 .addGap(19, 19, 19))
         );
@@ -389,7 +407,9 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCedula)
-                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -409,8 +429,8 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                             .addComponent(lblFecha)
                             .addComponent(txtFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSubtotal)
                     .addComponent(txtSubtotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -430,22 +450,22 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnCerrar1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnP1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnP11))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnCerrar2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnP2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP22))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCerrar1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP11)))
+                        .addComponent(btnP22)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(53, 53, 53)
@@ -467,35 +487,35 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAceptar)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnP1)
-                            .addComponent(btnP11)
-                            .addComponent(btnCerrar1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnP2)
-                            .addComponent(btnP22)
-                            .addComponent(btnCerrar2)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnKaren)
-                            .addComponent(btnEdu))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnCaja2)
-                            .addComponent(btnCaja1)
-                            .addComponent(btnFactura))))
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 538, Short.MAX_VALUE)
+                        .addComponent(btnAceptar)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnP1)
+                                    .addComponent(btnP11)
+                                    .addComponent(btnCerrar1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnP2)
+                                    .addComponent(btnP22)
+                                    .addComponent(btnCerrar2)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(btnKaren)
+                                    .addComponent(btnEdu))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnCaja2)
+                                    .addComponent(btnCaja1)
+                                    .addComponent(btnFactura)))))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -713,18 +733,28 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         for (int i = 0; i < facturas.size(); i++) {
             Factura factura = facturas.get(i);
             System.out.println(System.currentTimeMillis() - factura.getTiempoEspera());
-            if (System.currentTimeMillis() - factura.getTiempoEspera() > 30000) {
+            if (System.currentTimeMillis() - factura.getTiempoEspera() > 15000) {
                 factura.setNumeroFactura(controladorFactura.getCodigo());
                 double subtotal = 0;
                 for (Detalle detalle : factura.getDetalles()) {
                     subtotal += detalle.getSubtotal();
+                    for(Estante estante : estantes){
+                        if(estante.getProducto().equals(detalle.getProducto())){
+                            estante.setCantidad(estante.getCantidad() - 1);
+                            controladorEstante.update(estante);
+                            break;
+                        }
+                    }
                 }
                 factura.setSubtotal(subtotal);
                 factura.setIva(factura.getSubtotal() * 0.12);
                 factura.setTotal(factura.getSubtotal() + factura.getIva());
+                cliente.setSaldo(cliente.getSaldo() - factura.getTotal());
                 try {
                     controladorFactura.create(factura);
-                    JOptionPane.showMessageDialog(null, "Factura creada");
+                    controladorCliente.update(cliente);
+                    vaciarCajas();
+                    vaciarTablaFactura();
                 } catch (PSQLException ex) {
                     ex.printStackTrace();
                 }
@@ -773,8 +803,10 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                         try {
                             if (entrada.length() > 1) {
                                 cliente = controladorCliente.findByTarjeta(entrada);
-                                if (cliente != null && cliente.getNombre() != null) {//----modificado
-                                    enviarDato(100);
+                                if (cliente != null && cliente.getNombre() != null) {
+                                    if(cliente.getSaldo() > 0){
+                                        enviarDato(100);
+                                    }
                                     System.out.println(cliente);
                                     estantes.get(0).setAbierto(true);
                                     estantes.get(1).setAbierto(true);
@@ -830,6 +862,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         txtFecha.setText(fecha);
         txtTelefono.setText(cliente.getCelular());
         txtDireccion.setText(cliente.getDireccion());
+        txtSaldo.setText(String.format("%.2f", cliente.getSaldo()));
     }
 
     public void rellenarTabla(Factura factura) {
@@ -845,8 +878,30 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             };
             modelo.addRow(datos);
         }
+        double subtotal = 0;
+        for (Detalle detalle : factura.getDetalles()) {
+            subtotal += detalle.getSubtotal();
+        }
+        txtSubtotal.setText(Double.toString(subtotal));
+        txtIva.setText(String.format("%.2f", subtotal * 0.12));
+        double total = subtotal + (subtotal * 0.12);
+        txtTotal.setText(String.format("%.2f", total));
+        txtSaldo.setText(String.format("%.2f", cliente.getSaldo() - total));
     }
 
+    public void vaciarCajas(){
+        txtNumeroFactura.setText("");
+        txtCedula.setText("");
+        txtNombre.setText("");
+        txtFecha.setText("");
+        txtTelefono.setText("");
+        txtDireccion.setText("");
+        txtSaldo.setText("");
+        txtSubtotal.setText("");
+        txtIva.setText("");
+        txtTotal.setText("");
+    }
+    
     public void vaciarTablaFactura() {
         DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
         int filas = tblDetalles.getRowCount();
@@ -857,7 +912,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
 
     public void enviarDato(int valor) {
         try {
-            OutputStream escritura = puertoUSB.getOutputStream();//obteniendo objeto para enviar datos
+            OutputStream escritura = puertoUSB.getOutputStream();
             escritura.write(valor);
             escritura.close();
         } catch (IOException ex) {
@@ -868,7 +923,6 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         }
     }
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
@@ -883,6 +937,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     private javax.swing.JButton btnP11;
     private javax.swing.JButton btnP2;
     private javax.swing.JButton btnP22;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCedula;
@@ -901,6 +956,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     private javax.swing.JTextField txtIva;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtNumeroFactura;
+    private javax.swing.JTextField txtSaldo;
     private javax.swing.JTextField txtSubtotal;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtTotal;

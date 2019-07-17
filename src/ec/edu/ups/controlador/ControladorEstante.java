@@ -27,9 +27,32 @@ public class ControladorEstante {
         miBaseDatos = new BaseDatos();
     }
     
+    public int getCodigo() {
+        return codigo;
+    }
+    
+    public void obtenerCodigo(){
+        String sql = "SELECT MAX(\"EST_CODIGO\") FROM \"ESTANTE\";";
+        miBaseDatos.conectar();
+        try {
+            Statement sta = miBaseDatos.getConexionBD().createStatement();
+            ResultSet rs = sta.executeQuery(sql);
+            if (rs.next()) {
+                codigo = rs.getInt(1);
+                codigo++;
+            }
+            rs.close();
+            sta.close();
+            miBaseDatos.desconectar();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
     public void create(Estante estante) throws PSQLException{
-        String sql = "INSERT INTO \"ESTANTE\" VALUES(" + estante.getCodigo() + ", "
-                + estante.getProducto().getCodigoProducto() + ");";
+        String sql = "INSERT INTO \"ESTANTE\" VALUES(" + codigo + ", "
+                + estante.getProducto().getCodigoProducto() 
+                + estante.getCantidad() + ");";
 
         miBaseDatos.conectar();
         try {
@@ -59,6 +82,7 @@ public class ControladorEstante {
 
     public void update(Estante estante) {
         String sql = "UPDATE \"ESTANTE\" SET \"PRO_CODIGO\" = " + estante.getProducto().getCodigoProducto()
+                + ", \"EST_CANTIDAD\" = " + estante.getCantidad()
                 + " WHERE \"EST_CODIGO\" = " + estante.getCodigo() + ";";
         miBaseDatos.conectar();
 
@@ -83,6 +107,7 @@ public class ControladorEstante {
             if (rs.next()) {
                 estante.setCodigo(rs.getInt("EST_CODIGO"));
                 estante.setProducto(new ControladorProducto().read(rs.getInt("PRO_CODIGO")));
+                estante.setCantidad(rs.getInt("EST_CANTIDAD"));
             }
             rs.close();
             sta.close();
@@ -107,6 +132,7 @@ public class ControladorEstante {
                 Estante estante = new Estante();
                 estante.setCodigo(rs.getInt("EST_CODIGO"));
                 estante.setProducto(new ControladorProducto().read(rs.getInt("PRO_CODIGO")));
+                estante.setCantidad(rs.getInt("EST_CANTIDAD"));
                 estantes.add(estante);
             }
             rs.close();

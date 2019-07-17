@@ -12,6 +12,7 @@ package ec.edu.ups.modelo;
 public class Estante {
     
     private int codigo;
+    private int cantidad;
     private boolean abierto;
     private boolean seleccionado;
     private Producto producto;
@@ -21,6 +22,14 @@ public class Estante {
         abierto = false;
     }
 
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+    
     public boolean isSeleccionado() {
         return seleccionado;
     }

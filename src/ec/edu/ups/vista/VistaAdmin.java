@@ -50,7 +50,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
      */
     public VistaAdmin() {
         initComponents();
-        conectar();
+        //conectar();
         controladorFactura = new ControladorFactura();
         controladorCliente = new ControladorCliente();
         controladorProducto = new ControladorProducto();
@@ -132,7 +132,8 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                 cliente.getCelular(),
                 cliente.getCorreo(),
                 cliente.getDireccion(),
-                cliente.getCodigoTarjeta()
+                cliente.getCodigoTarjeta(),
+                cliente.getSaldo()
             };
             modelo.addRow(datos);
         }
@@ -203,6 +204,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         jLabel1 = new javax.swing.JLabel();
         txtSaldo = new javax.swing.JTextField();
         btnAgregarSaldo = new javax.swing.JButton();
+        btnSeleccionar = new javax.swing.JButton();
         pEst = new javax.swing.JPanel();
         lCodEstante = new javax.swing.JLabel();
         tCodEstante = new javax.swing.JTextField();
@@ -505,11 +507,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
             },
             new String [] {
-                "Cedula", "Nombre", "Celular", "Correo", "Direccion", "Tarjeta"
+                "Cedula", "Nombre", "Celular", "Correo", "Direccion", "Tarjeta", "Saldo"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -671,6 +673,13 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnSeleccionar.setText("Seleccionar");
+        btnSeleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSeleccionarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pCliLayout = new javax.swing.GroupLayout(pCli);
         pCli.setLayout(pCliLayout);
         pCliLayout.setHorizontalGroup(
@@ -685,7 +694,9 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                         .addComponent(bBuscarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(143, 143, 143)))
                 .addGap(18, 18, 18)
-                .addComponent(bEliminarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pCliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bEliminarCli, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                    .addComponent(btnSeleccionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(pCliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(pCliLayout.createSequentialGroup()
@@ -698,17 +709,19 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         pCliLayout.setVerticalGroup(
             pCliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pCliLayout.createSequentialGroup()
+                .addGap(7, 7, 7)
+                .addComponent(bBuscarCli)
                 .addGroup(pCliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pCliLayout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(bBuscarCli)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(pCliLayout.createSequentialGroup()
-                        .addGap(72, 72, 72)
+                        .addGap(26, 26, 26)
+                        .addComponent(btnSeleccionar)
+                        .addGap(29, 29, 29)
                         .addComponent(bEliminarCli)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(pCliLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1115,9 +1128,9 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
     private void bAceptarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bAceptarCliActionPerformed
         // TODO add your handling code here:
-
         try {
-            if (rbtnNuevoCli.isSelected()) {
+            if (!tTarCli.getText().equals("") && !tCed.getText().equals("")) {
+                if (rbtnNuevoCli.isSelected()) {
                 Cliente cliente = new Cliente();
                 cliente.setCodigoTarjeta(tTarCli.getText());
                 cliente.setCedula(tCed.getText());
@@ -1126,9 +1139,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                 cliente.setCelular(tCelCli.getText());
                 cliente.setCorreo(tCoCli.getText());
                 cliente.setDireccion(tDirCli.getText());
+                cliente.setSaldo(saldo);
                 controladorCliente.create(cliente);
                 llenarDatosCliente();
-            }else{
+                saldo = 0;
+            } else {
                 Cliente cliente = new Cliente();
                 cliente.setCodigoTarjeta(tTarCli.getText());
                 cliente.setCedula(tCed.getText());
@@ -1137,9 +1152,15 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                 cliente.setCelular(tCelCli.getText());
                 cliente.setCorreo(tCoCli.getText());
                 cliente.setDireccion(tDirCli.getText());
-                controladorCliente.create(cliente);
+                cliente.setSaldo(saldo);
+                controladorCliente.update(cliente);
                 llenarDatosCliente();
+                saldo = 0;
             }
+            }else{
+                JOptionPane.showMessageDialog(null, "Hay campos vacios");
+            }
+            
 
         } catch (PSQLException ex) {
             ex.printStackTrace();
@@ -1156,6 +1177,8 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         // TODO add your handling code here:
         rbtnActualizarCli.setSelected(false);
         tCed.setEditable(true);
+        saldo = 0;
+        vaciarCajasCliente();
     }//GEN-LAST:event_rbtnNuevoCliActionPerformed
 
     private void bEliminarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bEliminarCliActionPerformed
@@ -1264,14 +1287,39 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
 
     private void btnAgregarSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarSaldoActionPerformed
         // TODO add your handling code here:
-        try{
-            double saldoExtra = Double.parseDouble(JOptionPane.showInputDialog(null," Ingrese saldo: "));
+        try {
+            double saldoExtra = Double.parseDouble(JOptionPane.showInputDialog(null, " Ingrese saldo: "));
             saldo += saldoExtra;
             txtSaldo.setText(Double.toString(saldo));
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_btnAgregarSaldoActionPerformed
+
+    private void btnSeleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarActionPerformed
+        // TODO add your handling code here:
+        try {
+            rbtnActualizarCli.setSelected(true);
+            rbtnNuevoCli.setSelected(false);
+            tCed.setEditable(false);
+            int fila = tabCliente.getSelectedRow();
+            String cedula = (String) tabCliente.getValueAt(fila, 0);
+            Cliente cliente = controladorCliente.findByCedula(cedula);
+            tCed.setText(cliente.getCedula());
+            tNomCli.setText(cliente.getNombre());
+            tApellidoCli.setText(cliente.getApellido());
+            tCelCli.setText(cliente.getCelular());
+            tCoCli.setText(cliente.getCorreo());
+            tDirCli.setText(cliente.getDireccion());
+            tTarCli.setText(cliente.getCodigoTarjeta());
+            txtSaldo.setText(Double.toString(cliente.getSaldo()));
+            saldo = cliente.getSaldo();
+            rbtnNuevo.setSelected(false);
+        } catch (PSQLException ex) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado una fila");
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     public void vaciarTablaProducto(DefaultTableModel modelo) {
         int filas = tabProducto.getRowCount();
@@ -1299,6 +1347,17 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         tNomPro.setText("");
         tPrePro.setText("");
         tDesPro.setText("");
+    }
+
+    public void vaciarCajasCliente() {
+        tCed.setText("");
+        tNomCli.setText("");
+        tApellidoCli.setText("");
+        tCelCli.setText("");
+        tCoCli.setText("");
+        tDirCli.setText("");
+        tTarCli.setText("");
+        txtSaldo.setText("");
     }
 
     @Override
@@ -1346,6 +1405,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
     private javax.swing.JButton btnAceptarEst;
     private javax.swing.JButton btnAceptarProducto;
     private javax.swing.JButton btnAgregarSaldo;
+    private javax.swing.JButton btnSeleccionar;
     private javax.swing.JButton btnSeleccionarProducto;
     private javax.swing.JButton btnSeleccionarProducto1;
     private javax.swing.JLabel jLabel1;

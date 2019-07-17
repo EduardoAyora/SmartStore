@@ -22,7 +22,7 @@ public class Cliente {
     private String correo;
     private String direccion;
     private String codigoTarjeta;
-    private int saldo;
+    private double saldo;
 
     public Cliente() {
         saldo = 0;
@@ -41,12 +41,12 @@ public class Cliente {
     public void agregarSaldo(int saldoAgregado){
         saldo += saldoAgregado;
     }
-    
-    public int getSaldo() {
+
+    public double getSaldo() {
         return saldo;
     }
 
-    public void setSaldo(int saldo) {
+    public void setSaldo(double saldo) {
         this.saldo = saldo;
     }
     
