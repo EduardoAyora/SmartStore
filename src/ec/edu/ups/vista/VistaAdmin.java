@@ -118,9 +118,8 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         List<Estante> lista = controladorEstante.listar();
         for (Estante estante : lista) {
             Object[] datos = {estante.getCodigo(),
-                est,
-                producto.getPrecio(),
-                producto.getDescripcion()
+                estante.getProducto(),
+                estante.getCantidad()
             };
             modelo.addRow(datos);
         }
