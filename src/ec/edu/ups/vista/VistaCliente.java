@@ -58,6 +58,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     private List<Estante> estantes;
     private List<Factura> facturas;
     private Cliente cliente;
+    private String ultimaTarjeta;
 
     /**
      * Creates new form Prueba
@@ -76,11 +77,12 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         estantes = new ControladorEstante().listar();
         txtNumeroFactura.setText(Integer.toString(controladorFactura.getCodigo()));
         tblDetalles.setRowHeight(40);
+        ultimaTarjeta = "12345";
         emparejarPinesEstantes();
-        iniciarTimer();
+        //iniciarTimer();
         //conectar();
     }
-    
+
     public void emparejarPinesEstantes() {
         for (Pin pin : pines) {
             for (Estante estante : estantes) {
@@ -91,15 +93,17 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         }
     }
 
+    //Lo he quitado
+    /*
     public void iniciarTimer() {
         Timer timer = new Timer(8000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Revisando");
-                generarFactura();
+                generarFacturaAutomatico();
             }
         });
         timer.start();
-    }
+    }*/
 
     public void llegoPinArduino(int datoArduino) {
         Cliente clienteEstante = pines.get(datoArduino).getEstante().getCliente();
@@ -729,7 +733,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
 
     }
 
-    public void generarFactura() {
+    public void generarFacturaAutomatico() {
         for (int i = 0; i < facturas.size(); i++) {
             Factura factura = facturas.get(i);
             System.out.println(System.currentTimeMillis() - factura.getTiempoEspera());
@@ -738,8 +742,8 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 double subtotal = 0;
                 for (Detalle detalle : factura.getDetalles()) {
                     subtotal += detalle.getSubtotal();
-                    for(Estante estante : estantes){
-                        if(estante.getProducto().equals(detalle.getProducto())){
+                    for (Estante estante : estantes) {
+                        if (estante.getProducto().equals(detalle.getProducto())) {
                             estante.setCantidad(estante.getCantidad() - 1);
                             controladorEstante.update(estante);
                             break;
@@ -802,26 +806,38 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                         System.out.println("Tamaño: " + entrada.length());
                         try {
                             if (entrada.length() > 1) {
-                                cliente = controladorCliente.findByTarjeta(entrada);
-                                if (cliente != null && cliente.getNombre() != null) {
-                                    if(cliente.getSaldo() > 0){
-                                        enviarDato(100);
+                                if (entrada.equals(ultimaTarjeta)) {
+                                    for (Factura factura : facturas) {
+                                        if (factura.getCliente().equals(cliente)) {
+                                            generarFactura(factura);
+                                            break;
+                                        }
                                     }
-                                    System.out.println(cliente);
-                                    estantes.get(0).setAbierto(true);
-                                    estantes.get(1).setAbierto(true);
-                                    estantes.get(2).setAbierto(true);
-                                    estantes.get(3).setAbierto(true);
-                                    estantes.get(0).setCliente(cliente);
-                                    estantes.get(1).setCliente(cliente);
-                                    estantes.get(2).setCliente(cliente);
-                                    estantes.get(3).setCliente(cliente);
-                                    cajasDatosCliente();
-                                    vaciarTablaFactura();
-                                }
-                                for (Factura factura : facturas) {
-                                    if (factura.getCliente().equals(cliente)) {
-                                        rellenarTabla(factura);
+                                    ultimaTarjeta = "12345";
+                                } else {
+                                    cliente = controladorCliente.findByTarjeta(entrada);
+                                    if (cliente != null && cliente.getNombre() != null) {
+                                        ultimaTarjeta = entrada;
+                                        if (cliente.getSaldo() > 0) {
+                                            enviarDato(100);
+                                        }
+                                        System.out.println(cliente);
+                                        estantes.get(0).setAbierto(true);
+                                        estantes.get(1).setAbierto(true);
+                                        estantes.get(2).setAbierto(true);
+                                        estantes.get(3).setAbierto(true);
+                                        estantes.get(0).setCliente(cliente);
+                                        estantes.get(1).setCliente(cliente);
+                                        estantes.get(2).setCliente(cliente);
+                                        estantes.get(3).setCliente(cliente);
+                                        cajasDatosCliente();
+                                        vaciarTablaFactura();
+                                    }
+                                    for (Factura factura : facturas) {
+                                        if (factura.getCliente().equals(cliente)) {
+                                            rellenarTabla(factura);
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -889,7 +905,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         txtSaldo.setText(String.format("%.2f", cliente.getSaldo() - total));
     }
 
-    public void vaciarCajas(){
+    public void vaciarCajas() {
         txtNumeroFactura.setText("");
         txtCedula.setText("");
         txtNombre.setText("");
@@ -901,7 +917,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         txtIva.setText("");
         txtTotal.setText("");
     }
-    
+
     public void vaciarTablaFactura() {
         DefaultTableModel modelo = (DefaultTableModel) tblDetalles.getModel();
         int filas = tblDetalles.getRowCount();
@@ -920,6 +936,45 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "No se ha conectado");
             ex.printStackTrace();
+        }
+    }
+
+    public void generarFactura(Factura factura) {
+        factura.setNumeroFactura(controladorFactura.getCodigo());
+        double subtotal = 0;
+        for (Detalle detalle : factura.getDetalles()) {
+            subtotal += detalle.getSubtotal();
+            for (Estante estante : estantes) {
+                if (estante.getProducto().equals(detalle.getProducto())) {
+                    estante.setCantidad(estante.getCantidad() - 1);
+                    controladorEstante.update(estante);
+                    break;
+                }
+            }
+        }
+        factura.setSubtotal(subtotal);
+        factura.setIva(factura.getSubtotal() * 0.12);
+        factura.setTotal(factura.getSubtotal() + factura.getIva());
+        cliente.setSaldo(cliente.getSaldo() - factura.getTotal());
+        try {
+            controladorFactura.create(factura);
+            controladorCliente.update(cliente);
+            vaciarCajas();
+            vaciarTablaFactura();
+        } catch (PSQLException ex) {
+            ex.printStackTrace();
+        }
+        for (Detalle detalle : factura.getDetalles()) {
+            try {
+                controladorDetalle.create(detalle, factura.getNumeroFactura());
+            } catch (PSQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        for(int i = 0; i < facturas.size(); i++){
+            if(factura.getNumeroFactura() == facturas.get(i).getNumeroFactura()){
+                facturas.remove(i);
+            }
         }
     }
 
