@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="238a8f5e-c847-4408-b0c4-4e6b2acd215d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+     CLIENTE."CLI_CEDULA" AS CLIENTE_CLI_CEDULA,
+     CLIENTE."CLI_NOMBRE" AS CLIENTE_CLI_NOMBRE,
+     CLIENTE."CLI_APELLIDO" AS CLIENTE_CLI_APELLIDO,
+     CLIENTE."CLI_CELULAR" AS CLIENTE_CLI_CELULAR,
+     CLIENTE."CLI_CORREO" AS CLIENTE_CLI_CORREO,
+     CLIENTE."CLI_DIRECCION" AS CLIENTE_CLI_DIRECCION,
+     CLIENTE."CLI_TARJETA" AS CLIENTE_CLI_TARJETA,
+     CLIENTE."CLI_SALDO" AS CLIENTE_CLI_SALDO,
+     DETALLE."DET_CODIGO" AS DETALLE_DET_CODIGO,
+     DETALLE."DET_PRECIO" AS DETALLE_DET_PRECIO,
+     DETALLE."DET_CANTIDAD" AS DETALLE_DET_CANTIDAD,
+     DETALLE."DET_SUBTOTAL" AS DETALLE_DET_SUBTOTAL,
+     DETALLE."PRO_CODIGO" AS DETALLE_PRO_CODIGO,
+     DETALLE."FAC_CODIGO" AS DETALLE_FAC_CODIGO
+FROM
+     "public"."CLIENTE" CLIENTE,
+     "public"."DETALLE" DETALLE]]>
+	</queryString>
+	<field name="cliente_cli_cedula" class="java.lang.String"/>
+	<field name="cliente_cli_nombre" class="java.lang.String"/>
+	<field name="cliente_cli_apellido" class="java.lang.String"/>
+	<field name="cliente_cli_celular" class="java.lang.String"/>
+	<field name="cliente_cli_correo" class="java.lang.String"/>
+	<field name="cliente_cli_direccion" class="java.lang.String"/>
+	<field name="cliente_cli_tarjeta" class="java.lang.String"/>
+	<field name="cliente_cli_saldo" class="java.math.BigDecimal"/>
+	<field name="detalle_det_codigo" class="java.math.BigDecimal"/>
+	<field name="detalle_det_precio" class="java.math.BigDecimal"/>
+	<field name="detalle_det_cantidad" class="java.math.BigDecimal"/>
+	<field name="detalle_det_subtotal" class="java.math.BigDecimal"/>
+	<field name="detalle_pro_codigo" class="java.math.BigDecimal"/>
+	<field name="detalle_fac_codigo" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="51" y="59" width="100" height="20" uuid="1f4424d1-0001-4232-8825-4bfdd711ba66"/>
+				<textFieldExpression><![CDATA[$F{field}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
