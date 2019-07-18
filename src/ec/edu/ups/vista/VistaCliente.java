@@ -521,11 +521,11 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             parametro.put("FACTURA", factura);
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametro, baseDatos.getConexionBD());
             JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
-            JasperViewer.viewReport(jasperPrint);
+            JasperViewer.viewReport(jasperPrint, false);
             baseDatos.desconectar();
         } catch (JRException ex) {
             ex.printStackTrace();
-            Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
