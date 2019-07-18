@@ -53,7 +53,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
      */
     public VistaAdmin() {
         initComponents();
-        //conectar();
+        conectar();
         controladorFactura = new ControladorFactura();
         controladorCliente = new ControladorCliente();
         controladorProducto = new ControladorProducto();

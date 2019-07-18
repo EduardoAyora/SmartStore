@@ -80,7 +80,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         ultimaTarjeta = "12345";
         emparejarPinesEstantes();
         //iniciarTimer();
-        //conectar();
+        conectar();
     }
 
     public void emparejarPinesEstantes() {
@@ -104,18 +104,23 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         });
         timer.start();
     }*/
-
     public void llegoPinArduino(int datoArduino) {
+        boolean incrementar = true;
+        if (datoArduino > 49) {
+            datoArduino -= 50;
+            incrementar = false;
+        }
         Cliente clienteEstante = pines.get(datoArduino).getEstante().getCliente();
-        System.out.println(pines.get(datoArduino).getEstante().getProducto());
-        System.out.println("Cliente :" + clienteEstante != null);
-        System.out.println("Pines :" + pines.get(datoArduino).getEstante().isAbierto());
-        System.out.println("ultimo: " + pines.get(datoArduino).isActivado());
-        if (clienteEstante != null && pines.get(datoArduino).getEstante().isAbierto() && pines.get(datoArduino).isActivado() == false) {
-            Producto producto = pines.get(datoArduino).getEstante().getProducto();
-            System.out.println(clienteEstante);
-            facturacion(clienteEstante, producto);
-            pines.get(datoArduino).setActivado(true);
+        if (clienteEstante != null && pines.get(datoArduino).getEstante().isAbierto()) {
+            if (incrementar) {
+                Producto producto = pines.get(datoArduino).getEstante().getProducto();
+                System.out.println(clienteEstante);
+                facturacion(clienteEstante, producto, true);
+            } else {
+                //Se resta 50 ya que ese es el codigo que llega de arduino
+                Producto producto = pines.get(datoArduino).getEstante().getProducto();
+                facturacion(clienteEstante, producto, false);
+            }
         }
     }
 
@@ -144,18 +149,6 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnEdu = new javax.swing.JButton();
-        btnKaren = new javax.swing.JButton();
-        btnP1 = new javax.swing.JButton();
-        btnP11 = new javax.swing.JButton();
-        btnP2 = new javax.swing.JButton();
-        btnP22 = new javax.swing.JButton();
-        btnCaja1 = new javax.swing.JToggleButton();
-        btnCaja2 = new javax.swing.JButton();
-        btnAceptar = new javax.swing.JButton();
-        btnCerrar1 = new javax.swing.JButton();
-        btnCerrar2 = new javax.swing.JButton();
-        btnFactura = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         txtCedula = new javax.swing.JTextField();
         lblCedula = new javax.swing.JLabel();
@@ -184,90 +177,6 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
-            }
-        });
-
-        btnEdu.setText("Edu");
-        btnEdu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEduActionPerformed(evt);
-            }
-        });
-
-        btnKaren.setText("Karen");
-        btnKaren.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKarenActionPerformed(evt);
-            }
-        });
-
-        btnP1.setText("Producto 1");
-        btnP1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnP1ActionPerformed(evt);
-            }
-        });
-
-        btnP11.setText("Producto 1");
-        btnP11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnP11ActionPerformed(evt);
-            }
-        });
-
-        btnP2.setText("Producto 2");
-        btnP2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnP2ActionPerformed(evt);
-            }
-        });
-
-        btnP22.setText("Producto 2");
-        btnP22.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnP22ActionPerformed(evt);
-            }
-        });
-
-        btnCaja1.setText("Estante1");
-        btnCaja1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCaja1ActionPerformed(evt);
-            }
-        });
-
-        btnCaja2.setText("Estante2");
-        btnCaja2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCaja2ActionPerformed(evt);
-            }
-        });
-
-        btnAceptar.setText("Aceptar");
-        btnAceptar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAceptarActionPerformed(evt);
-            }
-        });
-
-        btnCerrar1.setText("Cerrar1");
-        btnCerrar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrar1ActionPerformed(evt);
-            }
-        });
-
-        btnCerrar2.setText("Cerrar2");
-        btnCerrar2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrar2ActionPerformed(evt);
-            }
-        });
-
-        btnFactura.setText("Crear Factura");
-        btnFactura.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFacturaActionPerformed(evt);
             }
         });
 
@@ -397,7 +306,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 164, Short.MAX_VALUE))))
+                                        .addGap(0, 623, Short.MAX_VALUE))))
                             .addComponent(jScrollPane1))))
                 .addGap(19, 19, 19))
         );
@@ -446,7 +355,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTotal)
                     .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -456,218 +365,18 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCerrar1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP11))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCerrar2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnP22)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(53, 53, 53)
-                        .addComponent(btnEdu, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(55, 55, 55)
-                        .addComponent(btnKaren)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnFactura)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAceptar)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCaja1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnCaja2)))
-                        .addContainerGap())))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 538, Short.MAX_VALUE)
-                        .addComponent(btnAceptar)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnP1)
-                                    .addComponent(btnP11)
-                                    .addComponent(btnCerrar1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnP2)
-                                    .addComponent(btnP22)
-                                    .addComponent(btnCerrar2)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(btnKaren)
-                                    .addComponent(btnEdu))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(btnCaja2)
-                                    .addComponent(btnCaja1)
-                                    .addComponent(btnFactura)))))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnEduActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEduActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Edu esta usando la tarjeta");
-        String usuario = "22517315225";
-        try {
-            cliente = controladorCliente.findByTarjeta(usuario);
-            System.out.println(cliente);
-            estantes.get(0).setAbierto(true);
-            estantes.get(1).setAbierto(true);
-            estantes.get(2).setAbierto(true);
-            estantes.get(3).setAbierto(true);
-            estantes.get(0).setCliente(cliente);
-            estantes.get(1).setCliente(cliente);
-            estantes.get(2).setCliente(cliente);
-            estantes.get(3).setCliente(cliente);
-            cajasDatosCliente();
-            vaciarTablaFactura();
-            for (Factura factura : facturas) {
-                if (factura.getCliente().equals(cliente)) {
-                    rellenarTabla(factura);
-                }
-            }
-        } catch (PSQLException ex) {
-            Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnEduActionPerformed
-
-    private void btnKarenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKarenActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Karen esta usando la tarjeta");
-        String usuario = "1671621851";
-        try {
-            cliente = controladorCliente.findByTarjeta(usuario);
-            System.out.println(cliente);
-            estantes.get(0).setAbierto(true);
-            estantes.get(1).setAbierto(true);
-            estantes.get(2).setAbierto(true);
-            estantes.get(3).setAbierto(true);
-            estantes.get(0).setCliente(cliente);
-            estantes.get(1).setCliente(cliente);
-            estantes.get(2).setCliente(cliente);
-            estantes.get(3).setCliente(cliente);
-            cajasDatosCliente();
-            vaciarTablaFactura();
-            for (Factura factura : facturas) {
-                if (factura.getCliente().equals(cliente)) {
-                    rellenarTabla(factura);
-                }
-            }
-        } catch (PSQLException ex) {
-            Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnKarenActionPerformed
-
-    private void btnP1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP1ActionPerformed
-        // TODO add your handling code here:
-        int datoArduino = 0;
-        llegoPinArduino(datoArduino);
-    }//GEN-LAST:event_btnP1ActionPerformed
-
-    private void btnP22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP22ActionPerformed
-        // TODO add your handling code here:
-        int datoArduino = 5;
-        llegoPinArduino(datoArduino);
-    }//GEN-LAST:event_btnP22ActionPerformed
-
-    private void btnP11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP11ActionPerformed
-        // TODO add your handling code here:
-        int datoArduino = 10;
-        llegoPinArduino(datoArduino);
-    }//GEN-LAST:event_btnP11ActionPerformed
-
-    private void btnP2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnP2ActionPerformed
-        // TODO add your handling code here:
-        int datoArduino = 15;
-        llegoPinArduino(datoArduino);
-    }//GEN-LAST:event_btnP2ActionPerformed
-
-    private void btnCaja1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja1ActionPerformed
-        // TODO add your handling code here:
-        int estante = 1;
-        estanteSeleccionado(estante);
-        btnCaja1.setSelected(false);
-    }//GEN-LAST:event_btnCaja1ActionPerformed
-
-    private void btnCaja2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCaja2ActionPerformed
-        // TODO add your handling code here:
-        int estante = 2;
-        estanteSeleccionado(estante);
-    }//GEN-LAST:event_btnCaja2ActionPerformed
-
-    private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        // TODO add your handling code here:
-        cliente = null;
-        int contador = 1;
-        for (Estante estante : estantes) {
-            if (estante.isSeleccionado()) {
-                System.out.println("Esta seleccionado estante " + contador);
-                estante.setAbierto(true);
-                estante.setSeleccionado(false);
-            }
-            contador++;
-        }
-    }//GEN-LAST:event_btnAceptarActionPerformed
-
-    private void btnFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturaActionPerformed
-        // TODO add your handling code here:
-        for (Factura factura : facturas) {
-            factura.setNumeroFactura(controladorFactura.getCodigo());
-            double subtotal = 0;
-            for (Detalle detalle : factura.getDetalles()) {
-                subtotal += detalle.getSubtotal();
-            }
-            factura.setSubtotal(subtotal);
-            factura.setIva(factura.getSubtotal() * 0.12);
-            factura.setTotal(factura.getSubtotal() + factura.getIva());
-            try {
-                controladorFactura.create(factura);
-                JOptionPane.showMessageDialog(null, "Factura creada");
-            } catch (PSQLException ex) {
-                ex.printStackTrace();
-            }
-            for (Detalle detalle : factura.getDetalles()) {
-                try {
-                    controladorDetalle.create(detalle, factura.getNumeroFactura());
-                } catch (PSQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-        facturas = new ArrayList<>();
-    }//GEN-LAST:event_btnFacturaActionPerformed
-
-    private void btnCerrar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar1ActionPerformed
-        // TODO add your handling code here:
-        enviarDato(101);
-    }//GEN-LAST:event_btnCerrar1ActionPerformed
-
-    private void btnCerrar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrar2ActionPerformed
-        // TODO add your handling code here:
-        int codigoArduino = 2;
-        cerrarEstante(codigoArduino);
-    }//GEN-LAST:event_btnCerrar2ActionPerformed
 
     private void txtNumeroFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroFacturaActionPerformed
         // TODO add your handling code here:
@@ -689,22 +398,31 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         }
     }//GEN-LAST:event_formWindowClosing
 
-    public void facturacion(Cliente clienteEstante, Producto producto) {
+    public void facturacion(Cliente clienteEstante, Producto producto, boolean incrementar) {
         boolean clienteEncontrado = false;
+        System.out.println(producto);
         for (Factura factura : facturas) {
             if (factura.getCliente().equals(clienteEstante)) {
-                System.out.println("Cliente encontrado");
                 boolean productoEncontrado = false;
                 for (Detalle detalle : factura.getDetalles()) {
                     if (detalle.getProducto().equals(producto)) {
-                        System.out.println("Producto encontrado");
-                        detalle.setCantidad(detalle.getCantidad() + 1);
+                        if (incrementar) {
+                            detalle.setCantidad(detalle.getCantidad() + 1);
+                        } else {
+                            if (detalle.getCantidad() > 0) {
+                                detalle.setCantidad(detalle.getCantidad() - 1);
+                                if (detalle.getCantidad() == 0) {
+                                    factura.getDetalles().remove(detalle);
+                                }
+                            }
+                        }
                         detalle.setSubtotal(detalle.getCantidad() * detalle.getPrecio());
                         productoEncontrado = true;
                         rellenarTabla(factura);
+                        break;
                     }
                 }
-                if (productoEncontrado == false) {
+                if (productoEncontrado == false && incrementar) {
                     Detalle detalle = new Detalle();
                     detalle.setPrecio(producto.getPrecio());
                     detalle.setCantidad(1);
@@ -718,7 +436,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 break;
             }
         }
-        if (clienteEncontrado == false) {
+        if (clienteEncontrado == false && incrementar) {
             Detalle detalle = new Detalle();
             detalle.setPrecio(producto.getPrecio());
             detalle.setCantidad(1);
@@ -809,6 +527,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                                 if (entrada.equals(ultimaTarjeta)) {
                                     for (Factura factura : facturas) {
                                         if (factura.getCliente().equals(cliente)) {
+                                            System.out.println("Generando factura");
                                             generarFactura(factura);
                                             break;
                                         }
@@ -854,11 +573,10 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 if (lecturaSensor.available() > 0) {
                     int valor = lecturaSensor.read();
                     if (valor == 101) {
+                        System.out.println("Cerrar");
                         enviarDato(valor);
                     } else {
-                        valor -= 20;
-                        valor = valor / 2;
-                        System.out.println(valor);
+                        System.out.println("Llego de arduino: " + valor);
                         llegoPinArduino(valor);
                     }
 
@@ -957,6 +675,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         factura.setTotal(factura.getSubtotal() + factura.getIva());
         cliente.setSaldo(cliente.getSaldo() - factura.getTotal());
         try {
+            System.out.println("Se creo Factura");
             controladorFactura.create(factura);
             controladorCliente.update(cliente);
             vaciarCajas();
@@ -971,8 +690,8 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                 ex.printStackTrace();
             }
         }
-        for(int i = 0; i < facturas.size(); i++){
-            if(factura.getNumeroFactura() == facturas.get(i).getNumeroFactura()){
+        for (int i = 0; i < facturas.size(); i++) {
+            if (factura.getNumeroFactura() == facturas.get(i).getNumeroFactura()) {
                 facturas.remove(i);
             }
         }
@@ -980,18 +699,6 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAceptar;
-    private javax.swing.JToggleButton btnCaja1;
-    private javax.swing.JButton btnCaja2;
-    private javax.swing.JButton btnCerrar1;
-    private javax.swing.JButton btnCerrar2;
-    private javax.swing.JButton btnEdu;
-    private javax.swing.JButton btnFactura;
-    private javax.swing.JButton btnKaren;
-    private javax.swing.JButton btnP1;
-    private javax.swing.JButton btnP11;
-    private javax.swing.JButton btnP2;
-    private javax.swing.JButton btnP22;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
