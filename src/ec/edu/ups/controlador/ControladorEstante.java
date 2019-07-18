@@ -95,7 +95,7 @@ public class ControladorEstante {
         }
     }
     
-    public Estante read(int codigo){
+    public Estante read(int codigo) throws PSQLException{
         Estante estante = new Estante();
         
         try {
@@ -114,6 +114,8 @@ public class ControladorEstante {
             miBaseDatos.desconectar();
         } catch (Exception ex) {
             ex.printStackTrace();
+            ServerErrorMessage serverError = new ServerErrorMessage("");
+            throw new PSQLException(serverError);
         }
         
         return estante;

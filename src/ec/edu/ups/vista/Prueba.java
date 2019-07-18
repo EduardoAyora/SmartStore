@@ -26,16 +26,16 @@ import net.sf.jasperreports.view.JasperViewer;
 public class Prueba {
     
     public static void main(String[] args) {
-        String url = "jdbc:postgresql://localhost:5432/BaseDatos";
+        String url = "jdbc:postgresql://localhost:5432/SmartStore";
         String user = "postgres";
-        String password = "Aga381joker";
+        String password = "chibi2998";
         try {
             BaseDatos baseDatos = new BaseDatos();
             baseDatos.conectar();
             File reporteArchivo = new File("src/ec/edu/ups/reporte/factura.jasper");
             JasperReport reporte = (JasperReport) JRLoader.loadObject(reporteArchivo);
             Map parametro = new HashMap();
-            int factura = 1;
+            int factura = 3;
             //Puse el parametro CEDULA porque lo llame de la misma forma en el .jrxml - REPPORT INSPECTOR - PARAMETERS
             //El resto de codigo está en la sentencia sql
             parametro.put("FACTURA", factura);

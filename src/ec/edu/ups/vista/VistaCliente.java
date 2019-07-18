@@ -5,6 +5,7 @@
  */
 package ec.edu.ups.vista;
 
+import ec.edu.ups.controlador.BaseDatos;
 import ec.edu.ups.controlador.ControladorCliente;
 import ec.edu.ups.controlador.ControladorDetalle;
 import ec.edu.ups.controlador.ControladorEstante;
@@ -26,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -33,12 +35,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 import org.postgresql.util.PSQLException;
 
 /**
@@ -493,6 +504,31 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
         }
     }
 
+    public void imprimirFactura() {
+        String url = "jdbc:postgresql://localhost:5432/SmartStore";
+        String user = "postgres";
+        String password = "Aga381joker";
+        try {
+            BaseDatos baseDatos = new BaseDatos();
+            baseDatos.conectar();
+            File reporteArchivo = new File("src/ec/edu/ups/reporte/factura.jasper");
+            JasperReport reporte = (JasperReport) JRLoader.loadObject(reporteArchivo);
+            Map parametro = new HashMap();
+            int factura = controladorFactura.getCodigo() - 1;
+            System.out.println("Codigo factura = " + factura);
+            //Puse el parametro CEDULA porque lo llame de la misma forma en el .jrxml - REPPORT INSPECTOR - PARAMETERS
+            //El resto de codigo está en la sentencia sql
+            parametro.put("FACTURA", factura);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametro, baseDatos.getConexionBD());
+            JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
+            JasperViewer.viewReport(jasperPrint);
+            baseDatos.desconectar();
+        } catch (JRException ex) {
+            ex.printStackTrace();
+            Logger.getLogger(Prueba.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void conectar() {
         try {
             puertoUSB = new NRSerialPort("COM6", 9600);
@@ -659,7 +695,9 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
     }
 
     public void generarFactura(Factura factura) {
-        if (factura.getTotal() > 0) {
+
+        if (factura.getDetalles().size() > 0) {
+            System.out.println("Factura mayor a 0");
             factura.setNumeroFactura(controladorFactura.getCodigo());
             double subtotal = 0;
             for (Detalle detalle : factura.getDetalles()) {
@@ -696,6 +734,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                     facturas.remove(i);
                 }
             }
+            imprimirFactura();
         }
         vaciarCajas();
         vaciarTablaFactura();

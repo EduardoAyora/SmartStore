@@ -3,7 +3,9 @@
 	<property name="ireport.zoom" value="1.610510000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="FACTURA" class="java.lang.Integer"/>
+	<parameter name="FACTURA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
      CLIENTE."CLI_CEDULA" AS CLIENTE_CLI_CEDULA,
@@ -12,19 +14,28 @@
      CLIENTE."CLI_CELULAR" AS CLIENTE_CLI_CELULAR,
      CLIENTE."CLI_CORREO" AS CLIENTE_CLI_CORREO,
      CLIENTE."CLI_DIRECCION" AS CLIENTE_CLI_DIRECCION,
-     CLIENTE."CLI_TARJETA" AS CLIENTE_CLI_TARJETA,
-     CLIENTE."CLI_SALDO" AS CLIENTE_CLI_SALDO,
      DETALLE."DET_CODIGO" AS DETALLE_DET_CODIGO,
      DETALLE."DET_PRECIO" AS DETALLE_DET_PRECIO,
      DETALLE."DET_CANTIDAD" AS DETALLE_DET_CANTIDAD,
      DETALLE."DET_SUBTOTAL" AS DETALLE_DET_SUBTOTAL,
      DETALLE."PRO_CODIGO" AS DETALLE_PRO_CODIGO,
-     DETALLE."FAC_CODIGO" AS DETALLE_FAC_CODIGO
+     DETALLE."FAC_CODIGO" AS DETALLE_FAC_CODIGO,
+     FACTURA."FAC_CODIGO" AS FACTURA_FAC_CODIGO,
+     FACTURA."FAC_FECHA" AS FACTURA_FAC_FECHA,
+     FACTURA."CLI_CEDULA" AS FACTURA_CLI_CEDULA,
+     FACTURA."FAC_SUBTOTAL" AS FACTURA_FAC_SUBTOTAL,
+     FACTURA."FAC_IVA" AS FACTURA_FAC_IVA,
+     FACTURA."FAC_TOTAL" AS FACTURA_FAC_TOTAL,
+     PRODUCTO."PRO_CODIGO" AS PRODUCTO_PRO_CODIGO,
+     PRODUCTO."PRO_NOMBRE" AS PRODUCTO_PRO_NOMBRE,
+     PRODUCTO."PRO_PRECIO" AS PRODUCTO_PRO_PRECIO,
+     PRODUCTO."PRO_DESCRIPCION" AS PRODUCTO_PRO_DESCRIPCION
 FROM
-     "public"."CLIENTE" CLIENTE,
-     "public"."DETALLE" DETALLE
+     "public"."CLIENTE" CLIENTE INNER JOIN "public"."FACTURA" FACTURA ON CLIENTE."CLI_CEDULA" = FACTURA."CLI_CEDULA"
+     INNER JOIN "public"."DETALLE" DETALLE ON FACTURA."FAC_CODIGO" = DETALLE."FAC_CODIGO"
+     INNER JOIN "public"."PRODUCTO" PRODUCTO ON DETALLE."PRO_CODIGO" = PRODUCTO."PRO_CODIGO"
 WHERE
-DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
+FACTURA."FAC_CODIGO" = $P{FACTURA}]]>
 	</queryString>
 	<field name="cliente_cli_cedula" class="java.lang.String"/>
 	<field name="cliente_cli_nombre" class="java.lang.String"/>
@@ -32,14 +43,22 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 	<field name="cliente_cli_celular" class="java.lang.String"/>
 	<field name="cliente_cli_correo" class="java.lang.String"/>
 	<field name="cliente_cli_direccion" class="java.lang.String"/>
-	<field name="cliente_cli_tarjeta" class="java.lang.String"/>
-	<field name="cliente_cli_saldo" class="java.math.BigDecimal"/>
 	<field name="detalle_det_codigo" class="java.math.BigDecimal"/>
 	<field name="detalle_det_precio" class="java.math.BigDecimal"/>
 	<field name="detalle_det_cantidad" class="java.math.BigDecimal"/>
 	<field name="detalle_det_subtotal" class="java.math.BigDecimal"/>
 	<field name="detalle_pro_codigo" class="java.math.BigDecimal"/>
 	<field name="detalle_fac_codigo" class="java.math.BigDecimal"/>
+	<field name="factura_fac_codigo" class="java.math.BigDecimal"/>
+	<field name="factura_fac_fecha" class="java.sql.Date"/>
+	<field name="factura_cli_cedula" class="java.lang.String"/>
+	<field name="factura_fac_subtotal" class="java.math.BigDecimal"/>
+	<field name="factura_fac_iva" class="java.math.BigDecimal"/>
+	<field name="factura_fac_total" class="java.math.BigDecimal"/>
+	<field name="producto_pro_codigo" class="java.math.BigDecimal"/>
+	<field name="producto_pro_nombre" class="java.lang.String"/>
+	<field name="producto_pro_precio" class="java.math.BigDecimal"/>
+	<field name="producto_pro_descripcion" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -71,10 +90,6 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 				<rectangle>
 					<reportElement x="12" y="8" width="376" height="57" uuid="630e0d88-1593-448b-9103-0cf1cdff3535"/>
 				</rectangle>
-				<textField>
-					<reportElement x="66" y="10" width="156" height="20" uuid="33ff2394-600b-4557-ad94-1bb8bbe0e359"/>
-					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement x="12" y="10" width="54" height="20" uuid="b087250a-8214-4626-b705-a0cc11aa2e40"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -111,20 +126,29 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 					<text><![CDATA[Teléfono:]]></text>
 				</staticText>
 				<textField>
+					<reportElement x="66" y="10" width="156" height="20" uuid="33ff2394-600b-4557-ad94-1bb8bbe0e359"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cliente_cli_nombre}+$F{cliente_cli_apellido}]]></textFieldExpression>
+				</textField>
+				<textField>
 					<reportElement x="66" y="30" width="156" height="18" uuid="203b227c-13ef-4803-b03f-27defe428beb"/>
-					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cliente_cli_direccion}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="66" y="48" width="156" height="17" uuid="88912ba5-f224-4d36-8af0-7aaba2f2400f"/>
-					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cliente_cli_correo}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="276" y="10" width="100" height="20" uuid="6a7c5df3-4e8d-4298-9239-b805d18aeeeb"/>
+					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="276" y="30" width="100" height="20" uuid="d8c93f6c-9dc6-4e00-8a59-1f668fe72cb1"/>
-					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cliente_cli_celular}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<staticText>
@@ -134,11 +158,6 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 				</textElement>
 				<text><![CDATA[Nro.:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="677e23e1-7ec0-420c-a15d-6ddf0747d374"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="418" y="20" width="37" height="28" uuid="27d6386c-40fc-4880-96b1-82c1180a6085"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -147,9 +166,19 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 				<text><![CDATA[Fecha:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="28" width="100" height="20" uuid="5066433b-6605-49b9-b34a-525a9d30f7b3"/>
-				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<reportElement x="531" y="0" width="24" height="20" uuid="84e9a014-487d-4482-acaf-5cdf61daeb04"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{factura_fac_codigo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="456" y="0" width="75" height="20" uuid="ddcd8def-c320-461a-b348-ca4ec60bdd66"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[001-001 000000]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="456" y="28" width="99" height="20" uuid="ffcc1c5b-656f-4d6e-a451-bb1aa3d8e1a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{factura_fac_fecha}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -193,84 +222,105 @@ DETALLE."FAC_CODIGO" = $P{FACTURA}]]>
 				</textElement>
 				<text><![CDATA[Descripción]]></text>
 			</staticText>
+			<line>
+				<reportElement x="51" y="1" width="1" height="20" uuid="00dcd10a-13b4-42bb-8ba5-22a41f4ad273"/>
+			</line>
+			<line>
+				<reportElement x="303" y="1" width="1" height="20" uuid="d063007d-eb26-497f-8950-60437dde67ac"/>
+			</line>
+			<line>
+				<reportElement x="355" y="1" width="1" height="20" uuid="3d13f506-42f4-4ffa-9dd7-f0a272c664dc"/>
+			</line>
+			<line>
+				<reportElement x="455" y="1" width="1" height="20" uuid="61d8d341-4cd3-48e4-97c0-87ce5b75fa0f"/>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<rectangle>
 				<reportElement x="0" y="0" width="555" height="20" uuid="97194208-7a3e-4f58-bfc1-832d9688f916"/>
 			</rectangle>
+			<line>
+				<reportElement x="51" y="0" width="1" height="20" uuid="b950ec96-1b72-4ce6-a9fa-c0fc8e856b5f"/>
+			</line>
+			<line>
+				<reportElement x="303" y="0" width="1" height="20" uuid="fd7e75b3-33ef-472a-afc2-f549face1171"/>
+			</line>
+			<line>
+				<reportElement x="355" y="0" width="1" height="20" uuid="1f2c5c71-2526-461b-b1bd-3e09a5283480"/>
+			</line>
+			<line>
+				<reportElement x="455" y="0" width="1" height="20" uuid="a523814f-4f05-4fc7-9d73-21eb015005d4"/>
+			</line>
 			<textField>
-				<reportElement x="0" y="0" width="51" height="20" uuid="9d18cec7-9899-43d5-b3ce-03d489cec328"/>
+				<reportElement x="0" y="0" width="52" height="17" uuid="a39e5042-24f0-4651-947b-add559b045bd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{detalle_pro_codigo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="51" y="0" width="253" height="20" uuid="977f40b2-7a44-4cdb-9b95-ee90de2365ed"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<reportElement x="53" y="0" width="251" height="17" uuid="15b50e16-97ee-4502-95ec-7890cce22616"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{producto_pro_descripcion}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="304" y="0" width="51" height="20" uuid="9e30e2a7-fe7e-432d-b329-4ab8f8e23b23"/>
+				<reportElement x="304" y="0" width="51" height="17" uuid="0adf16ee-8981-4851-a21b-5d6cea1f9e63"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{detalle_det_cantidad}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="355" y="0" width="100" height="20" uuid="62bdef4a-04a3-4cd9-ac70-f3dd2f6fc2d0"/>
+				<reportElement x="356" y="0" width="99" height="17" uuid="5fe127ee-87f1-4cdc-80bf-59f12ea6d7cf"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{detalle_det_precio}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="cf56f5fd-cd09-48f1-be3c-4ea55ceefae0"/>
+				<reportElement x="456" y="0" width="99" height="17" uuid="765982c6-77e4-423b-af99-b8b763e53e94"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{detalle_det_subtotal}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="83" splitType="Stretch">
+		<band height="20" splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="64" splitType="Stretch">
 			<staticText>
-				<reportElement x="355" y="0" width="100" height="20" uuid="7c54910e-cdcf-4676-8801-4d2f41f24526"/>
+				<reportElement x="354" y="2" width="100" height="20" uuid="7c54910e-cdcf-4676-8801-4d2f41f24526"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[SubTotal:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="355" y="20" width="100" height="20" uuid="1bdde3e2-56e7-41ba-876d-f543be5d7ec0"/>
+				<reportElement x="354" y="22" width="100" height="20" uuid="1bdde3e2-56e7-41ba-876d-f543be5d7ec0"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[I.V.A.:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="355" y="40" width="100" height="20" uuid="4399c0eb-8d85-4ba3-a0dd-3ea52c660ec9"/>
+				<reportElement x="354" y="43" width="100" height="20" uuid="4399c0eb-8d85-4ba3-a0dd-3ea52c660ec9"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="0" width="100" height="20" uuid="4fff6934-d241-44b9-84af-bf661df0f008"/>
+				<reportElement x="455" y="43" width="100" height="20" uuid="6ea100e1-63b3-4b93-beff-e925bcbbb04c"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{factura_fac_total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="20" width="100" height="20" uuid="39f257bb-f025-4eb3-9f15-d0c090cc00eb"/>
+				<reportElement x="455" y="22" width="99" height="20" uuid="446440f0-87ca-4639-b79f-6e951ae5f95d"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{factura_fac_iva}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="40" width="100" height="20" uuid="49bfddc0-9ea5-4fe5-9b5d-51adc9ada982"/>
+				<reportElement x="455" y="2" width="99" height="20" uuid="b689dbd0-e94b-41d0-bdb7-dac53af2a40a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{factura_fac_subtotal}]]></textFieldExpression>
 			</textField>
 		</band>
-	</columnFooter>
-	<pageFooter>
-		<band splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>
