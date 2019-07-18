@@ -47,6 +47,7 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
@@ -520,13 +521,15 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             //El resto de codigo está en la sentencia sql
             parametro.put("FACTURA", factura);
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametro, baseDatos.getConexionBD());
-            JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
-            JasperViewer.viewReport(jasperPrint, false);
+            JasperPrintManager.printReport(jasperPrint, false);
+            //JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
+            //JasperViewer.viewReport(jasperPrint, false);
             baseDatos.desconectar();
         } catch (JRException ex) {
             ex.printStackTrace();
             Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     public void conectar() {
