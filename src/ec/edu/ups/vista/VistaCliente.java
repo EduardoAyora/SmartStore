@@ -521,7 +521,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             //El resto de codigo está en la sentencia sql
             parametro.put("FACTURA", factura);
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametro, baseDatos.getConexionBD());
-            JasperPrintManager.printReport(jasperPrint, true);//Poner en false-------------------------------------------------
+            JasperPrintManager.printReport(jasperPrint, false);//Poner en false-------------------------------------------------
             //JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
             //JasperViewer.viewReport(jasperPrint, false);
             baseDatos.desconectar();
@@ -573,7 +573,9 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
                                         }
                                     }
                                     ultimaTarjeta = "12345";
+                                    System.out.println("Entro en facturar");
                                 } else {
+                                    System.out.println("Entro en abrir");
                                     cliente = controladorCliente.findByTarjeta(entrada);
                                     if (cliente != null && cliente.getNombre() != null) {
                                         ultimaTarjeta = entrada;

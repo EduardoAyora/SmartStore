@@ -82,6 +82,11 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JButton" name="bCliente">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/ec/edu/ups/modelo/meseroR.png"/>
+            </Property>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bClienteActionPerformed"/>
           </Events>
@@ -126,6 +131,11 @@
       </Layout>
       <SubComponents>
         <Component class="javax.swing.JButton" name="bAdministracion">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/ec/edu/ups/modelo/cajaR.png"/>
+            </Property>
+          </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bAdministracionActionPerformed"/>
           </Events>

@@ -57,6 +57,7 @@ public class VistaMain extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
+        bCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/ups/modelo/meseroR.png"))); // NOI18N
         bCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bClienteActionPerformed(evt);
@@ -90,6 +91,7 @@ public class VistaMain extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1);
 
+        bAdministracion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ec/edu/ups/modelo/cajaR.png"))); // NOI18N
         bAdministracion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bAdministracionActionPerformed(evt);

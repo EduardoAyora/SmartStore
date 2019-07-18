@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="238a8f5e-c847-4408-b0c4-4e6b2acd215d">
 	<property name="ireport.zoom" value="1.610510000000001"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="1"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="FACTURA" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -99,7 +99,7 @@ FACTURA."FAC_CODIGO" = $P{FACTURA}]]>
 				</staticText>
 				<staticText>
 					<reportElement x="12" y="30" width="54" height="18" uuid="fcceaa72-d0ec-4e7c-adeb-5a96d02bfb48"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Dirección:]]></text>
@@ -126,27 +126,27 @@ FACTURA."FAC_CODIGO" = $P{FACTURA}]]>
 					<text><![CDATA[Teléfono:]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="66" y="10" width="156" height="20" uuid="33ff2394-600b-4557-ad94-1bb8bbe0e359"/>
+					<reportElement x="77" y="10" width="145" height="20" uuid="33ff2394-600b-4557-ad94-1bb8bbe0e359"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{cliente_cli_nombre}+$F{cliente_cli_apellido}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{cliente_cli_nombre}+" "+$F{cliente_cli_apellido}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="66" y="30" width="156" height="18" uuid="203b227c-13ef-4803-b03f-27defe428beb"/>
+					<reportElement x="77" y="30" width="145" height="18" uuid="203b227c-13ef-4803-b03f-27defe428beb"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{cliente_cli_direccion}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="66" y="48" width="156" height="17" uuid="88912ba5-f224-4d36-8af0-7aaba2f2400f"/>
+					<reportElement x="77" y="48" width="145" height="17" uuid="88912ba5-f224-4d36-8af0-7aaba2f2400f"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{cliente_cli_correo}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="276" y="10" width="100" height="20" uuid="6a7c5df3-4e8d-4298-9239-b805d18aeeeb"/>
+					<reportElement x="286" y="10" width="90" height="20" uuid="6a7c5df3-4e8d-4298-9239-b805d18aeeeb"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{cliente_cli_cedula}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="276" y="30" width="100" height="20" uuid="d8c93f6c-9dc6-4e00-8a59-1f668fe72cb1"/>
+					<reportElement x="286" y="30" width="90" height="20" uuid="d8c93f6c-9dc6-4e00-8a59-1f668fe72cb1"/>
 					<textElement textAlignment="Justified" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{cliente_cli_celular}]]></textFieldExpression>
 				</textField>
@@ -176,7 +176,7 @@ FACTURA."FAC_CODIGO" = $P{FACTURA}]]>
 				<text><![CDATA[001-001 000000]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="456" y="28" width="99" height="20" uuid="ffcc1c5b-656f-4d6e-a451-bb1aa3d8e1a7"/>
+				<reportElement x="456" y="20" width="99" height="28" uuid="ffcc1c5b-656f-4d6e-a451-bb1aa3d8e1a7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{factura_fac_fecha}]]></textFieldExpression>
 			</textField>
