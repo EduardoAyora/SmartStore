@@ -521,7 +521,7 @@ public class VistaCliente extends javax.swing.JFrame implements SerialPortEventL
             //El resto de codigo está en la sentencia sql
             parametro.put("FACTURA", factura);
             JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, parametro, baseDatos.getConexionBD());
-            JasperPrintManager.printReport(jasperPrint, false);
+            JasperPrintManager.printReport(jasperPrint, true);//Poner en false-------------------------------------------------
             //JasperExportManager.exportReportToPdfFile(jasperPrint, "reporteDireccion.pdf");
             //JasperViewer.viewReport(jasperPrint, false);
             baseDatos.desconectar();

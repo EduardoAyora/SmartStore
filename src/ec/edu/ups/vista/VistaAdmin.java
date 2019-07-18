@@ -153,7 +153,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
                 cliente.getCorreo(),
                 cliente.getDireccion(),
                 cliente.getCodigoTarjeta(),
-                cliente.getSaldo()
+                String.format("%.2f", cliente.getSaldo())
             };
             modelo.addRow(datos);
         }
@@ -602,6 +602,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         jLabel1.setText("Saldo:");
 
         txtSaldo.setEditable(false);
+        txtSaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSaldoActionPerformed(evt);
+            }
+        });
 
         btnAgregarSaldo.setText("Agregar Saldo");
         btnAgregarSaldo.addActionListener(new java.awt.event.ActionListener() {
@@ -766,6 +771,11 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         lCodEstante.setText("Código de Estante:");
 
         bBuscarEst.setText("Buscar");
+        bBuscarEst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bBuscarEstActionPerformed(evt);
+            }
+        });
 
         tabEstante.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1362,7 +1372,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
             tCoCli.setText(cliente.getCorreo());
             tDirCli.setText(cliente.getDireccion());
             tTarCli.setText(cliente.getCodigoTarjeta());
-            txtSaldo.setText(Double.toString(cliente.getSaldo()));
+            txtSaldo.setText(String.format("%.2f", cliente.getSaldo()));
             saldo = cliente.getSaldo();
             rbtnNuevo.setSelected(false);
         } catch (PSQLException ex) {
@@ -1385,7 +1395,7 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
             tCoCli.setText(cliente.getCorreo());
             tDirCli.setText(cliente.getDireccion());
             tTarCli.setText(cliente.getCodigoTarjeta());
-            txtSaldo.setText(Double.toString(cliente.getSaldo()));
+            txtSaldo.setText(String.format("%.2f", cliente.getSaldo()));
             saldo = cliente.getSaldo();
             rbtnNuevo.setSelected(false);
         } catch (PSQLException ex) {
@@ -1442,6 +1452,29 @@ public class VistaAdmin extends javax.swing.JFrame implements SerialPortEventLis
         }
         llenarDatosEstante();
     }//GEN-LAST:event_btnAceptarEstActionPerformed
+
+    private void bBuscarEstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bBuscarEstActionPerformed
+        // TODO add your handling code here:
+        try {
+            rbtnActualizarEst.setSelected(true);
+            rbtnNuevoEst.setSelected(false);
+            tCed.setEditable(false);
+            int codigo = Integer.parseInt(tCodEstante.getText());
+            Estante estante = controladorEstante.read(codigo);
+            tCodEst.setText(Integer.toString(codigo));
+            tProEst.setText(Integer.toString(estante.getProducto().getCodigoProducto()));
+            txtCantidad.setText(Integer.toString(estante.getCantidad()));
+            rbtnNuevoEst.setSelected(false);
+        } catch (PSQLException ex) {
+            JOptionPane.showMessageDialog(null, "No ha seleccionado una fila");
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_bBuscarEstActionPerformed
+
+    private void txtSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSaldoActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_txtSaldoActionPerformed
 
     public void vaciarTablaEstante(DefaultTableModel modelo) {
         int filas = tabEstante.getRowCount();
